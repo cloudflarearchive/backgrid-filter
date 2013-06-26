@@ -5,12 +5,33 @@
   Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
   Licensed under the MIT @license.
 */
+(function (factory) {
 
-(function (root) {
+  // CommonJS
+  if (typeof exports == "object") {
+
+    var lunr;
+
+    try {
+      lunr = require("lunr");
+    }
+    catch (err) {}
+
+    module.exports = factory(require("underscore"),
+                             require("backbone"),
+                             require("backgrid"),
+                             lunr);
+  }
+  // Browser
+  else if (typeof _ !== "underscore" &&
+           typeof Backbone !== "undefined" &&
+           typeof Backgrid !== "undefined") {
+    factory(_, Backbone, Backgrid, window.lunr);
+  }
+
+}(function (_, Backbone, Backgrid, lunr) {
 
   "use strict";
-
-  var Backbone = root.Backbone, Backgrid = root.Backgrid, lunr = root.lunr;
 
   /**
      ServerSideFilter is a search form widget that submits a query to the server
@@ -391,4 +412,4 @@
 
   });
 
-}(this));
+}));
