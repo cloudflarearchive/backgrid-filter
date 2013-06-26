@@ -13,6 +13,7 @@
   "eqnull": true,
   "-W018": true,
 
+  "node": true,
   "browser": true,
   "devel": true,
   "jquery": true,
