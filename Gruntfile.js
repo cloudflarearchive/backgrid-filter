@@ -28,21 +28,6 @@ module.exports = function (grunt) {
         "test/coverage/**/*"
       ]
     },
-    concat: {
-      backgrid: {
-        options: {
-          banner: '/*!\n  <%= pkg.name %>\n' +
-            '  <%= pkg.repository.url %>\n\n' +
-            '  Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-            '  Licensed under the MIT license.\n' +
-            '*/\n\n'
-        },
-        src: [
-          "backgrid-filter.js"
-        ],
-        dest: "backgrid-filter.js"
-      }
-    },
     jasmine: {
       test: {
         version: "1.3.1",
@@ -122,7 +107,6 @@ module.exports = function (grunt) {
   });
 
   grunt.loadNpmTasks("grunt-contrib-clean");
-  grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-recess");
   grunt.loadNpmTasks("grunt-jsduck");
