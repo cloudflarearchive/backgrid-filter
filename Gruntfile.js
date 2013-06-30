@@ -65,7 +65,6 @@ module.exports = function (grunt) {
         src: ["backgrid-filter.js"],
         dest: "api",
         options: {
-          "external": ["Backbone.Model,Backbone.Collection,Backbone.View"],
           "title": "backgrid-filter",
           "no-source": true,
           "categories": "categories.json",
