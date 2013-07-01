@@ -234,21 +234,46 @@
     },
 
     /**
+       Constructs a Javascript regular expression object for #makeMatcher.
+
+       This default implementation takes a query string and returns a Javascript
+       RegExp object that matches any of the words contained in the query string
+       case-insensitively. Override this method to return a different regular
+       expression matcher if this behavior is not desired.
+
+       @param {string} query The search query in the search box.
+       @return {RegExp} A RegExp object to match against model #fields.
+     */
+    makeRegExp: function (query) {
+      return new RegExp(query.trim().split(/\W/).join("|"), "i");
+    },
+
+    /**
        This default implementation takes a query string and returns a matcher
        function that looks for matches in the model's #fields or all of its
        fields if #fields is null, for any of the words in the query
-       case-insensitively.
+       case-insensitively using the regular expression object returned from
+       #makeRegExp.
+
+       Most of time, you'd want to override the regular expression used for
+       matching. If so, please refer to the #makeRegExp documentation,
+       otherwise, you can override this method to return a custom matching
+       function.
 
        Subclasses overriding this method must take care to conform to the
-       signature of the matcher function. In addition, when the matcher function
-       is called, its context will be bound to this ClientSideFilter object so
-       it has access to the filter's attributes and methods.
+       signature of the matcher function. The matcher function is a function
+       that takes a model as paramter and returns true if the model matches a
+       search, or false otherwise.
+
+       In addition, when the matcher function is called, its context will be
+       bound to this ClientSideFilter object so it has access to the filter's
+       attributes and methods.
 
        @param {string} query The search query in the search box.
        @return {function(Backbone.Model):boolean} A matching function.
     */
     makeMatcher: function (query) {
-      var regexp = new RegExp(query.trim().split(/\W/).join("|"), "i");
+      var regexp = this.makeRegExp(query);
       return function (model) {
         var keys = this.fields || model.keys();
         for (var i = 0, l = keys.length; i < l; i++) {
