@@ -245,7 +245,7 @@
        @return {RegExp} A RegExp object to match against model #fields.
      */
     makeRegExp: function (query) {
-      return new RegExp(query.trim().split(/\W/).join("|"), "i");
+	  return new RegExp(query.trim().split(/\s/).join("|"), "i");
     },
 
     /**
