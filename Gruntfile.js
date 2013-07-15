@@ -32,7 +32,10 @@ module.exports = function (grunt) {
       test: {
         version: "1.3.1",
         src: [
-          "backgrid-filter.js"
+          "AbstractFilter.js",
+          "ServerSideFilter.js",
+          "ClientSideFilter.js",
+          "LunrFilter.js",
         ],
         options: {
           specs: [
@@ -62,7 +65,12 @@ module.exports = function (grunt) {
     },
     jsduck: {
       main: {
-        src: ["backgrid-filter.js"],
+        src: [
+          "AbstractFilter.js",
+          "ServerSideFilter.js",
+          "ClientSideFilter.js",
+          "LunrFilter.js",
+        ],
         dest: "api",
         options: {
           "title": "backgrid-filter",
@@ -99,7 +107,12 @@ module.exports = function (grunt) {
       },
       "default": {
         files: {
-          "backgrid-filter.min.js": ["backgrid-filter.js"]
+          "backgrid-filter.min.js": [
+            "AbstractFilter.js",
+            "ServerSideFilter.js",
+            "ClientSideFilter.js",
+            "LunrFilter.js"
+          ],
         }
       }
     }
