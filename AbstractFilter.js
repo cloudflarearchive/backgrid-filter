@@ -69,7 +69,6 @@
        @param {string} [options.wait=149]
        */
       initialize: function (options) {
-          Backgrid.requireOptions(options, ["collection"]);
           Backbone.View.prototype.initialize.apply(this, arguments);
           this.wait = options.wait || this.wait;
           this.name = options.name || this.name;
