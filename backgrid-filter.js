@@ -72,7 +72,6 @@
        @param {string} [options.placeholder]
     */
     initialize: function (options) {
-      Backgrid.requireOptions(options, ["collection"]);
       Backbone.View.prototype.initialize.apply(this, arguments);
       this.name = options.name || this.name;
       this.placeholder = options.placeholder || this.placeholder;
