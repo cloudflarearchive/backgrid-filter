@@ -179,6 +179,32 @@ describe("A ServerSideFilter", function () {
     expect(collection.state.currentPage).toBe(1);
     expect(collection.state.totalRecords).toBe(3);
     expect(collection.at(0).toJSON()).toEqual({id: 3});
+
+    collection = new Backbone.PageableCollection([{id: 1}, {id: 2}], {
+      url: "http://www.example.com",
+      state: {
+        firstPage: 0,
+        pageSize: 1,
+        totalRecords: 3
+      },
+      queryParams: {
+        totalRecords: null,
+        totalPages: null
+      }
+    });
+    var filter = new Backgrid.Extension.ServerSideFilter({
+      collection: collection
+    });
+    filter.render();
+    collection.getNextPage();
+    filter.searchBox().val("query");
+    filter.$el.submit();
+    expect(url).toBe("http://www.example.com");
+    expect(data).toEqual({q: "query", page: 0, "per_page": 1});
+    expect(collection.length).toBe(1);
+    expect(collection.state.currentPage).toBe(0);
+    expect(collection.state.totalRecords).toBe(3);
+    expect(collection.at(0).toJSON()).toEqual({id: 3});
   });
 
   it("can clear the search box and refetch upon clicking the cross", function () {

@@ -106,7 +106,7 @@
       if (Backbone.PageableCollection &&
           collection instanceof Backbone.PageableCollection &&
           collection.mode == "server") {
-        collection.state.currentPage = 1;
+        collection.state.currentPage = collection.state.firstPage;
       }
       else {
         var query = this.searchBox().val();
