@@ -52,6 +52,7 @@
 
     /** @property */
     events: {
+      "keyup input[type=search]": "showClearButtonMaybe",
       "click .clear": "clear",
       "submit": "search"
     },
@@ -87,8 +88,29 @@
       }
     },
 
+    /**
+       Event handler. Show the clear button when the search box has text, hide
+       it otherwise.
+     */
+    showClearButtonMaybe: function () {
+      var $clearButton = this.clearButton();
+      var searchTerms = this.searchBox().val();
+      if (searchTerms) $clearButton.show();
+      else $clearButton.hide();
+    },
+
+    /**
+       Returns the search input box.
+     */
     searchBox: function () {
       return this.$el.find("input[type=search]");
+    },
+
+    /**
+       Returns the clear button.
+     */
+    clearButton: function () {
+      return this.$el.find(".clear");
     },
 
     /**
@@ -123,6 +145,7 @@
     clear: function (e) {
       if (e) e.preventDefault();
       this.searchBox().val(null);
+      this.showClearButtonMaybe();
       this.collection.fetch({reset: true});
     },
 
@@ -136,6 +159,7 @@
         placeholder: this.placeholder,
         value: this.value
       }));
+      this.showClearButtonMaybe();
       this.delegateEvents();
       return this;
     }
@@ -153,7 +177,7 @@
   var ClientSideFilter = Backgrid.Extension.ClientSideFilter = ServerSideFilter.extend({
 
     /** @property */
-    events: {
+    events: _.extend({}, ServerSideFilter.prototype.events, {
       "click .clear": function (e) {
         e.preventDefault();
         this.clear();
@@ -163,7 +187,7 @@
         e.preventDefault();
         this.search();
       }
-    },
+    }),
 
     /**
        @property {?Array.<string>} [fields] A list of model field names to

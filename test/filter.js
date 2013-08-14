@@ -219,6 +219,20 @@ describe("A ServerSideFilter", function () {
     collection.fetch.reset();
   });
 
+  it("shows the clear button when the search box has text entered, hides it otherwise", function () {
+    var filter = new Backgrid.Extension.ServerSideFilter({
+      collection: collection
+    });
+    filter.render();
+    expect(filter.$el.find(".clear").css("display")).toBe("none");
+
+    filter.searchBox().val("query").trigger("keyup");
+    expect(filter.$el.find(".clear").css("display")).toBe("inline");
+
+    filter.searchBox().val(null).trigger("keyup");
+    expect(filter.$el.find(".clear").css("display")).toBe("none");
+  });
+
 });
 
 describe("A ClientSideFilter", function () {
