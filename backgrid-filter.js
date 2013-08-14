@@ -48,11 +48,11 @@
     className: "backgrid-filter form-search",
 
     /** @property {function(Object, ?Object=): string} template */
-    template: _.template('<div class="input-prepend input-append"><span class="add-on"><i class="icon-search"></i></span><input type="text" <% if (placeholder) { %> placeholder="<%- placeholder %>" <% } %> name="<%- name %>" /><span class="add-on"><a class="close" href="#">&times;</a></span></div>'),
+    template: _.template('<span class="search">&nbsp;</span><input type="search" <% if (placeholder) { %> placeholder="<%- placeholder %>" <% } %> name="<%- name %>" /><a class="clear" href="#">&times;</a>'),
 
     /** @property */
     events: {
-      "click .close": "clear",
+      "click .clear": "clear",
       "submit": "search"
     },
 
@@ -72,7 +72,7 @@
        @param {string} [options.placeholder]
     */
     initialize: function (options) {
-      Backbone.View.prototype.initialize.apply(this, arguments);
+      ServerSideFilter.__super__.initialize.apply(this, arguments);
       this.name = options.name || this.name;
       this.placeholder = options.placeholder || this.placeholder;
 
@@ -88,7 +88,7 @@
     },
 
     searchBox: function () {
-      return this.$el.find("input[type=text]");
+      return this.$el.find("input[type=search]");
     },
 
     /**
@@ -117,7 +117,7 @@
     },
 
     /**
-       Event handler for the close button. Clears the search box and refetch the
+       Event handler for the clear button. Clears the search box and refetch the
        collection.
     */
     clear: function (e) {
@@ -154,11 +154,11 @@
 
     /** @property */
     events: {
-      "click .close": function (e) {
+      "click .clear": function (e) {
         e.preventDefault();
         this.clear();
       },
-      "keydown input[type=text]": "search",
+      "keydown input[type=search]": "search",
       "submit": function (e) {
         e.preventDefault();
         this.search();
@@ -190,7 +190,7 @@
        @param {string} [options.wait=149]
     */
     initialize: function (options) {
-      ServerSideFilter.prototype.initialize.apply(this, arguments);
+      ClientSideFilter.__super__.initialize.apply(this, arguments);
 
       this.fields = options.fields || this.fields;
       this.wait = options.wait || this.wait;
@@ -312,7 +312,7 @@
      @class Backgrid.Extension.LunrFilter
      @extends Backgrid.Extension.ClientSideFilter
   */
-  Backgrid.Extension.LunrFilter = ClientSideFilter.extend({
+  var LunrFilter = Backgrid.Extension.LunrFilter = ClientSideFilter.extend({
 
     /**
        @property {string} [ref="id"]｀lunrjs` document reference attribute name.
@@ -341,7 +341,7 @@
        @param {number} [options.wait]
     */
     initialize: function (options) {
-      ClientSideFilter.prototype.initialize.apply(this, arguments);
+      LunrFilter.__super__.initialize.apply(this, arguments);
 
       this.ref = options.ref || this.ref;
 

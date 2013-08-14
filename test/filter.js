@@ -214,7 +214,7 @@ describe("A ServerSideFilter", function () {
     });
     filter.render();
     filter.searchBox().val("query");
-    filter.$el.find(".close").click();
+    filter.$el.find(".clear").click();
     expect(filter.searchBox().val()).toBe("");
     collection.fetch.reset();
   });
@@ -233,7 +233,7 @@ describe("A ClientSideFilter", function () {
          {id: 3, name: "bob"}]);
   });
 
-  it("can perform a regex search on keydown and submit, and cancel on clicking the close button", function () {
+  it("can perform a regex search on keydown and submit, and cancel on clicking the clear button", function () {
     var filter;
 
     runs(function () {
@@ -242,6 +242,7 @@ describe("A ClientSideFilter", function () {
         fields: ["name"]
       });
       filter.render();
+
       expect(collection.length).toBe(3);
       expect(collection.at(0).id).toBe(1);
       expect(collection.at(1).id).toBe(2);
@@ -259,7 +260,7 @@ describe("A ClientSideFilter", function () {
     });
 
     runs(function () {
-      filter.$el.find(".close").click();
+      filter.$el.find(".clear").click();
     });
     waitsFor(function () {
       return collection.length === 3;
@@ -448,7 +449,7 @@ describe("A LunrFilter", function () {
          {id: 2, name: "bob", bio: "he is fat but does not crap"}]);
   });
 
-  it("can perform a full-text search on keydown and submit, and cancel on clicking the close button", function () {
+  it("can perform a full-text search on keydown and submit, and cancel on clicking the clear button", function () {
     var filter;
 
     runs(function () {
@@ -473,7 +474,7 @@ describe("A LunrFilter", function () {
     });
 
     runs(function () {
-      filter.$el.find(".close").click();
+      filter.$el.find(".clear").click();
     });
     waitsFor(function () {
       return collection.length === 2;
@@ -636,7 +637,7 @@ describe("A LunrFilter", function () {
     });
   });
 
-  it("can clear the search box and reindex upon clicking the close button", function () {
+  it("can clear the search box and reindex upon clicking the clear button", function () {
     var filter;
 
     runs(function () {
@@ -655,7 +656,7 @@ describe("A LunrFilter", function () {
     }, "collection.length to become 1", 500);
 
     runs(function () {
-      filter.$el.find(".close").click();
+      filter.$el.find(".clear").click();
     });
     waitsFor(function () {
       return collection.length === 2;

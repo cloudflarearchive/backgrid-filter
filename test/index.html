@@ -5,6 +5,7 @@
     <title>Backgrid.js Jasmine Spec Runner</title>
     
     <link rel="stylesheet" type="text/css" href="vendor/css/jasmine.css">
+    <link rel="stylesheet" type="text/css" href="../backgrid-filter.css">
     <script src="vendor/js/jasmine.js"></script>
     <script src="vendor/js/jasmine-html.js"></script>
     
@@ -39,5 +40,11 @@
   </head>
   
   <body>
+    <script>
+     var filter = new Backgrid.Extension.ServerSideFilter({
+       collection: new Backbone.Collection()
+     });
+     $("body").append(filter.render().$el);
+    </script>
   </body>
 </html>
