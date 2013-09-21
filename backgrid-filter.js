@@ -196,8 +196,8 @@
     fields: null,
 
     /**
-       @property [wait=149] The time in milliseconds to wait since for since the
-       last change to the search box's value before searching. This value can be
+       @property [wait=149] The time in milliseconds to wait since the last
+       change to the search box's value before searching. This value can be
        adjusted depending on how often the search box is used and how large the
        search index is.
     */
