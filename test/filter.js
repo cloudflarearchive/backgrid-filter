@@ -214,7 +214,7 @@ describe("A ServerSideFilter", function () {
     });
     filter.render();
     filter.searchBox().val("query");
-    filter.$el.find(".clear").click();
+    filter.$el.find("a[data-backgrid-action=clear]").click();
     expect(filter.searchBox().val()).toBe("");
     collection.fetch.reset();
   });
@@ -224,13 +224,13 @@ describe("A ServerSideFilter", function () {
       collection: collection
     });
     filter.render();
-    expect(filter.$el.find(".clear").css("display")).toBe("none");
+    expect(filter.$el.find("a[data-backgrid-action=clear]").css("display")).toBe("none");
 
     filter.searchBox().val("query").trigger("keyup");
-    expect(filter.$el.find(".clear").css("display")).toBe("inline");
+    expect(filter.$el.find("a[data-backgrid-action=clear]").css("display")).toBe("inline");
 
     filter.searchBox().val(null).trigger("keyup");
-    expect(filter.$el.find(".clear").css("display")).toBe("none");
+    expect(filter.$el.find("a[data-backgrid-action=clear]").css("display")).toBe("none");
   });
 
 });
@@ -274,7 +274,7 @@ describe("A ClientSideFilter", function () {
     });
 
     runs(function () {
-      filter.$el.find(".clear").click();
+      filter.$el.find("a[data-backgrid-action=clear]").click();
     });
     waitsFor(function () {
       return collection.length === 3;
@@ -488,7 +488,7 @@ describe("A LunrFilter", function () {
     });
 
     runs(function () {
-      filter.$el.find(".clear").click();
+      filter.$el.find("a[data-backgrid-action=clear]").click();
     });
     waitsFor(function () {
       return collection.length === 2;
@@ -670,7 +670,7 @@ describe("A LunrFilter", function () {
     }, "collection.length to become 1", 500);
 
     runs(function () {
-      filter.$el.find(".clear").click();
+      filter.$el.find("a[data-backgrid-action=clear]").click();
     });
     waitsFor(function () {
       return collection.length === 2;

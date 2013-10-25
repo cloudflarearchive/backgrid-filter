@@ -48,12 +48,12 @@
     className: "backgrid-filter form-search",
 
     /** @property {function(Object, ?Object=): string} template */
-    template: _.template('<span class="search">&nbsp;</span><input type="search" <% if (placeholder) { %> placeholder="<%- placeholder %>" <% } %> name="<%- name %>" /><a class="clear" href="#">&times;</a>', null, {variable: null}),
+    template: _.template('<span class="search">&nbsp;</span><input type="search" <% if (placeholder) { %> placeholder="<%- placeholder %>" <% } %> name="<%- name %>" /><a class="clear" data-backgrid-action="clear" href="#">&times;</a>', null, {variable: null}),
 
     /** @property */
     events: {
       "keyup input[type=search]": "showClearButtonMaybe",
-      "click .clear": "clear",
+      "click a[data-backgrid-action=clear]": "clear",
       "submit": "search"
     },
 
@@ -110,7 +110,7 @@
        Returns the clear button.
      */
     clearButton: function () {
-      return this.$el.find(".clear");
+      return this.$el.find("a[data-backgrid-action=clear]");
     },
 
     /**
@@ -178,7 +178,7 @@
 
     /** @property */
     events: _.extend({}, ServerSideFilter.prototype.events, {
-      "click .clear": function (e) {
+      "click a[data-backgrid-action=clear]": function (e) {
         e.preventDefault();
         this.clear();
       },
