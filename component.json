@@ -1,0 +1,24 @@
+{
+  "name": "backgrid-filter",
+  "repo": "wyuenho/backgrid-filter",
+  "description": "Search box widget extension for Backgrid.js. Supports server-side, client-side and full-text searching",
+  "version": "0.3.0",
+  "keywords": [
+    "backbone",
+    "backgrid",
+    "filter"
+  ],
+  "main": "backgrid-filter.js",
+  "scripts": [
+    "backgrid-filter.js"
+  ],
+  "styles": [
+    "backgrid-filter.css"
+  ],
+  "dependencies": {
+    "jashkenas/underscore": "*",
+    "jashkenas/backbone": "*",
+    "wyuenho/backgrid": "*"
+  },
+  "license": "MIT"
+}
