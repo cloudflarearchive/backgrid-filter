@@ -72,9 +72,9 @@ describe("A ServerSideFilter", function () {
     expect(collection.at(0).toJSON()).toEqual({id: 1});
 
     filter = new Backgrid.Extension.ServerSideFilter({
-      collection: new Backbone.PageableCollection(null, {
+      collection: new (Backbone.PageableCollection.extend({
         url: "http://www.example.com"
-      })
+      }))(null)
     });
     filter.render();
     filter.searchBox().val("query");
@@ -104,9 +104,9 @@ describe("A ServerSideFilter", function () {
     expect(collection.at(0).toJSON()).toEqual({id: 1});
 
     var filter = new Backgrid.Extension.ServerSideFilter({
-      collection: new Backbone.PageableCollection(null, {
+      collection: new (Backbone.PageableCollection.extend({
         url: "http://www.example.com"
-      })
+      }))(null)
     });
     filter.render();
     filter.searchBox().val("");
@@ -124,8 +124,9 @@ describe("A ServerSideFilter", function () {
       data = settings.data;
       settings.success([{id: 2}]);
     };
-    collection = new Backbone.PageableCollection([{id: 1}], {
-      url: "http://www.example.com",
+    collection = new (Backbone.PageableCollection.extend({
+      url: "http://www.example.com"
+    }))([{id: 1}], {
       state: {
         pageSize: 1,
         totalRecords: 3
@@ -155,8 +156,9 @@ describe("A ServerSideFilter", function () {
       data = settings.data;
       settings.success([{id: 3}]);
     };
-    collection = new Backbone.PageableCollection([{id: 1}, {id: 2}], {
-      url: "http://www.example.com",
+    collection = new (Backbone.PageableCollection.extend({
+      url: "http://www.example.com"
+    }))([{id: 1}, {id: 2}], {
       state: {
         pageSize: 1,
         totalRecords: 3
@@ -180,8 +182,9 @@ describe("A ServerSideFilter", function () {
     expect(collection.state.totalRecords).toBe(3);
     expect(collection.at(0).toJSON()).toEqual({id: 3});
 
-    collection = new Backbone.PageableCollection([{id: 1}, {id: 2}], {
-      url: "http://www.example.com",
+    collection = new (Backbone.PageableCollection.extend({
+      url: "http://www.example.com"
+    }))([{id: 1}, {id: 2}], {
       state: {
         firstPage: 0,
         pageSize: 1,

@@ -63,6 +63,8 @@ function lpad(str, length, padstr) {
   return padding + str;
 }
 
+var $ = Backbone.$;
+
 var Backgrid = root.Backgrid = {
 
   VERSION: "0.3.0",
@@ -644,7 +646,7 @@ var InputCellEditor = Backgrid.InputCellEditor = CellEditor.extend({
   */
   render: function () {
     var model = this.model
-    this.$el.val(this.formatter.fromRaw(model.get(this.column.get("name"))), model);
+    this.$el.val(this.formatter.fromRaw(model.get(this.column.get("name")), model));
     return this;
   },
 
@@ -805,7 +807,7 @@ var Cell = Backgrid.Cell = Backbone.View.extend({
   render: function () {
     this.$el.empty();
     var model = this.model;
-    this.$el.text(this.formatter.fromRaw(model.get(this.column.get("name"))), model);
+    this.$el.text(this.formatter.fromRaw(model.get(this.column.get("name")), model));
     this.delegateEvents();
     return this;
   },
@@ -1258,11 +1260,13 @@ var BooleanCell = Backgrid.BooleanCell = Cell.extend({
   */
   render: function () {
     this.$el.empty();
-    var model = this.model;
+    var model = this.model, column = this.column;
+    var editable = Backgrid.callByNeed(column.editable(), column, model);
     this.$el.append($("<input>", {
       tabIndex: -1,
       type: "checkbox",
-      checked: this.formatter.fromRaw(model.get(this.column.get("name")), model)
+      checked: this.formatter.fromRaw(model.get(column.get("name")), model),
+      disabled: !editable
     }));
     this.delegateEvents();
     return this;
@@ -1289,7 +1293,7 @@ var SelectCellEditor = Backgrid.SelectCellEditor = CellEditor.extend({
   },
 
   /** @property {function(Object, ?Object=): string} template */
-  template: _.template('<option value="<%- value %>" <%= selected ? \'selected="selected"\' : "" %>><%- text %></option>'),
+  template: _.template('<option value="<%- value %>" <%= selected ? \'selected="selected"\' : "" %>><%- text %></option>', null, {variable: null}),
 
   setOptionValues: function (optionValues) {
     this.optionValues = optionValues;
@@ -2623,7 +2627,7 @@ var Grid = Backgrid.Grid = Backbone.View.extend({
      Initializes a Grid instance.
 
      @param {Object} options
-     @param {Backbone.Collection.<Backgrid.Column>|Array.<Backgrid.Column>|Array.<Object>} options.columns Column metadata.
+     @param {Backbone.Collection.<Backgrid.Columns>|Array.<Backgrid.Column>|Array.<Object>} options.columns Column metadata.
      @param {Backbone.Collection} options.collection The collection of tabular model data to display.
      @param {Backgrid.Header} [options.header=Backgrid.Header] An optional Header class to override the default.
      @param {Backgrid.Body} [options.body=Backgrid.Body] An optional Body class to override the default.
@@ -2638,30 +2642,30 @@ var Grid = Backgrid.Grid = Backbone.View.extend({
     }
     this.columns = options.columns;
 
-    var passedThruOptions = _.omit(options, ["el", "id", "attributes",
-                                             "className", "tagName", "events"]);
+    var filteredOptions = _.omit(options, ["el", "id", "attributes",
+                                           "className", "tagName", "events"]);
 
     // must construct body first so it listens to backgrid:sort first
     this.body = options.body || this.body;
-    this.body = new this.body(passedThruOptions);
+    this.body = new this.body(filteredOptions);
 
     this.header = options.header || this.header;
     if (this.header) {
-      this.header = new this.header(passedThruOptions);
+      this.header = new this.header(filteredOptions);
     }
 
     this.footer = options.footer || this.footer;
     if (this.footer) {
-      this.footer = new this.footer(passedThruOptions);
+      this.footer = new this.footer(filteredOptions);
     }
 
     this.listenTo(this.columns, "reset", function () {
       if (this.header) {
-        this.header = new (this.header.remove().constructor)(passedThruOptions);
+        this.header = new (this.header.remove().constructor)(filteredOptions);
       }
-      this.body = new (this.body.remove().constructor)(passedThruOptions);
+      this.body = new (this.body.remove().constructor)(filteredOptions);
       if (this.footer) {
-        this.footer = new (this.footer.remove().constructor)(passedThruOptions);
+        this.footer = new (this.footer.remove().constructor)(filteredOptions);
       }
       this.render();
     });
@@ -2756,5 +2760,5 @@ var Grid = Backgrid.Grid = Backbone.View.extend({
   }
 
 });
-
+return Backgrid;
 }));
