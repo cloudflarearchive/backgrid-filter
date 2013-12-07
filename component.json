@@ -19,7 +19,7 @@
     "jashkenas/underscore": "*",
     "jashkenas/backbone": "*",
     "wyuenho/backgrid": "*",
-    "olivernn/lunr": "*"
+    "olivernn/lunr.js": "*"
   },
   "license": "MIT"
 }
