@@ -9,24 +9,17 @@
 
   // CommonJS
   if (typeof exports == "object") {
-
-    var lunr;
-
-    try {
-      lunr = require("lunr");
-    }
-    catch (err) {}
-
     module.exports = factory(require("underscore"),
                              require("backbone"),
                              require("backgrid"),
-                             lunr);
+                             require("lunr"));
   }
   // Browser
-  else if (typeof _ !== "underscore" &&
+  else if (typeof _ !== "undefined" &&
            typeof Backbone !== "undefined" &&
-           typeof Backgrid !== "undefined") {
-    factory(_, Backbone, Backgrid, window.lunr);
+           typeof Backgrid !== "undefined" &&
+           typeof lunr !== "undefined") {
+    factory(_, Backbone, Backgrid, lunr);
   }
 
 }(function (_, Backbone, Backgrid, lunr) {

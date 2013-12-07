@@ -4,7 +4,7 @@ backgrid-filter
 
 Dependencies
 ============
-[lunr](http://lunrjs.com) (LunrFilter)
+[lunr >= 0.2.1](http://lunrjs.com) (LunrFilter)
 
 Usage
 =====
