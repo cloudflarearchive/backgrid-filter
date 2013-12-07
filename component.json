@@ -18,7 +18,8 @@
   "dependencies": {
     "jashkenas/underscore": "*",
     "jashkenas/backbone": "*",
-    "wyuenho/backgrid": "*"
+    "wyuenho/backgrid": "*",
+    "olivernn/lunr": "*"
   },
   "license": "MIT"
 }

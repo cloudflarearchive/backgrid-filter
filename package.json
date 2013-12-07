@@ -30,5 +30,8 @@
     "grunt-template-jasmine-istanbul": "~0.2.4",
     "grunt-contrib-jasmine": "~0.5.1"
   },
+  "dependencies": {
+    "lunr": "~0.4.3"
+  },
   "private": true
 }
