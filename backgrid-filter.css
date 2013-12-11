@@ -37,7 +37,9 @@
   width: 10px;
   height: 20px;
   margin-right: -10px;
-  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
 }
 
 .backgrid-filter .search:before {
@@ -53,7 +55,9 @@
      -moz-border-radius: 12px;
           border-radius: 12px;
   content: "";
-  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
 }
 
 .backgrid-filter .search:after {
@@ -70,7 +74,9 @@
       -ms-transform: rotate(-45deg);
        -o-transform: rotate(-45deg);
           transform: rotate(-45deg);
-  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
 }
 
 /*
