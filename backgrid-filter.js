@@ -5,24 +5,25 @@
   Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
   Licensed under the MIT @license.
 */
-(function (factory) {
+(function (root, factory) {
 
   // CommonJS
   if (typeof exports == "object") {
-    module.exports = factory(require("underscore"),
-                             require("backbone"),
-                             require("backgrid"),
-                             require("lunr"));
+    (function () {
+      var lunr;
+      try { lunr = require("lunr"); } catch (e) {}
+      module.exports = factory(require("underscore"),
+                               require("backbone"),
+                               require("backgrid"),
+                               lunr);
+    }());
   }
   // Browser
-  else if (typeof _ !== "undefined" &&
-           typeof Backbone !== "undefined" &&
-           typeof Backgrid !== "undefined" &&
-           typeof lunr !== "undefined") {
-    factory(_, Backbone, Backgrid, lunr);
+  else {
+    factory(root._, root.Backbone, root.Backgrid, root.lunr);
   }
 
-}(function (_, Backbone, Backgrid, lunr) {
+}(this, function (_, Backbone, Backgrid, lunr) {
 
   "use strict";
 
