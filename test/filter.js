@@ -195,15 +195,79 @@ describe("A ServerSideFilter", function () {
         totalPages: null
       }
     });
-    var filter = new Backgrid.Extension.ServerSideFilter({
+    filter = new Backgrid.Extension.ServerSideFilter({
       collection: collection
     });
     filter.render();
     collection.getNextPage();
-    filter.searchBox().val("query");
+    filter.searchBox().val("query").keyup();
     filter.$el.submit();
     expect(url).toBe("http://www.example.com");
     expect(data).toEqual({q: "query", page: 0, "per_page": 1});
+    expect(collection.length).toBe(1);
+    expect(collection.state.currentPage).toBe(0);
+    expect(collection.state.totalRecords).toBe(3);
+    expect(collection.at(0).toJSON()).toEqual({id: 3});
+  });
+
+  it("goes back to the first page when the clear button was clicked", function () {
+    var url, data;
+    $.ajax = function (settings) {
+      url = settings.url;
+      data = settings.data;
+      settings.success([{id: 3}]);
+    };
+
+    collection = new (Backbone.PageableCollection.extend({
+      url: "http://www.example.com"
+    }))([{id: 1}, {id: 2}], {
+      state: {
+        pageSize: 1,
+        totalRecords: 3
+      },
+      queryParams: {
+        totalRecords: null,
+        totalPages: null
+      }
+    });
+    var filter = new Backgrid.Extension.ServerSideFilter({
+      collection: collection
+    });
+    filter.render();
+    collection.getPage(2);
+    filter.searchBox().val("query").keyup();
+    filter.clearButton().click();
+    filter.$el.submit();
+    expect(url).toBe("http://www.example.com");
+    expect(data).toEqual({page: 1, "per_page": 1});
+    expect(collection.length).toBe(1);
+    expect(collection.state.currentPage).toBe(1);
+    expect(collection.state.totalRecords).toBe(3);
+    expect(collection.at(0).toJSON()).toEqual({id: 3});
+
+    collection = new (Backbone.PageableCollection.extend({
+      url: "http://www.example.com"
+    }))([{id: 1}, {id: 2}], {
+      state: {
+        firstPage: 0,
+        pageSize: 1,
+        totalRecords: 3
+      },
+      queryParams: {
+        totalRecords: null,
+        totalPages: null
+      }
+    });
+    filter = new Backgrid.Extension.ServerSideFilter({
+      collection: collection
+    });
+    filter.render();
+    collection.getPage(2);
+    filter.searchBox().val("query").keyup();
+    filter.clearButton().click();
+    filter.$el.submit();
+    expect(url).toBe("http://www.example.com");
+    expect(data).toEqual({page: 0, "per_page": 1});
     expect(collection.length).toBe(1);
     expect(collection.state.currentPage).toBe(0);
     expect(collection.state.totalRecords).toBe(3);
