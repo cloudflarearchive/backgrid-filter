@@ -229,8 +229,7 @@
       });
       this.listenTo(collection, "reset", function (col, options) {
         options = _.extend({reindex: true}, options || {});
-        if (options.reindex && col === collection &&
-            options.from == null && options.to == null) {
+        if (options.reindex && options.from == null && options.to == null) {
           shadowCollection.reset(col.models);
         }
       });
@@ -309,7 +308,7 @@
       var matcher = _.bind(this.makeMatcher(this.searchBox().val()), this);
       var col = this.collection;
       if (col.pageableCollection) col.pageableCollection.getFirstPage({silent: true});
-      this.collection.reset(this.shadowCollection.filter(matcher), {reindex: false});
+      col.reset(this.shadowCollection.filter(matcher), {reindex: false});
     },
 
     /**
@@ -318,7 +317,9 @@
     clear: function () {
       this.searchBox().val(null);
       this.showClearButtonMaybe();
-      this.collection.reset(this.shadowCollection.models, {reindex: false});
+      var col = this.collection;
+      if (col.pageableCollection) col.pageableCollection.getFirstPage({silent: true});
+      col.reset(this.shadowCollection.models, {reindex: false});
     }
 
   });

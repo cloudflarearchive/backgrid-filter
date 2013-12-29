@@ -268,7 +268,7 @@ describe("A ClientSideFilter", function () {
     });
 
     runs(function () {
-      filter.searchBox().val("bob").keydown();
+      filter.searchBox().val("bob").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 1;
@@ -301,7 +301,7 @@ describe("A ClientSideFilter", function () {
     });
 
     runs(function () {
-      filter.searchBox().val("al").keydown();
+      filter.searchBox().val("al").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 2;
@@ -312,7 +312,7 @@ describe("A ClientSideFilter", function () {
     });
 
     runs(function () {
-      filter.searchBox().val("alic bob").keydown();
+      filter.searchBox().val("alic bob").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 3;
@@ -334,7 +334,7 @@ describe("A ClientSideFilter", function () {
       });
       filter.render();
       collection.add({id: 4, name: "doug"});
-      filter.searchBox().val("doug").keydown();
+      filter.searchBox().val("doug").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 1;
@@ -355,7 +355,7 @@ describe("A ClientSideFilter", function () {
       });
       filter.render();
       collection.remove(collection.at(0));
-      filter.searchBox().val("alice").keydown();
+      filter.searchBox().val("alice").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 0;
@@ -378,7 +378,7 @@ describe("A ClientSideFilter", function () {
       });
       filter.render();
       filter.collection.at(0).set("name", "charlie");
-      filter.searchBox().val("charlie").keydown();
+      filter.searchBox().val("charlie").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 1;
@@ -401,7 +401,7 @@ describe("A ClientSideFilter", function () {
       });
       filter.render();
       filter.collection.reset([{id: 4, name: "charlie"}, {id: 5, name: "doug"}]);
-      filter.searchBox().val("").keydown();
+      filter.searchBox().val("").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 2;
@@ -437,7 +437,7 @@ describe("A ClientSideFilter", function () {
       });
       filter.render();
       collection.getPage(2);
-      filter.searchBox().val("bob").keydown();
+      filter.searchBox().val("bob").keydown().keyup();
     });
     waitsFor(function () {
       return collection.state.currentPage === 1;
@@ -446,11 +446,42 @@ describe("A ClientSideFilter", function () {
       expect(collection.length).toBe(1);
       expect(filter.shadowCollection.at(0).id).toBe(1);
       expect(filter.shadowCollection.at(1).id).toBe(2);
-      expect(filter.shadowCollection.at(0).get("name")).toBe("alice");
-      expect(filter.shadowCollection.at(1).get("name")).toBe("bob");
       expect(collection.state.currentPage).toBe(1);
       expect(collection.state.totalRecords).toBe(1);
       expect(collection.at(0).toJSON()).toEqual({id: 2, name: "bob"});
+    });
+  });
+
+  it("goes back to the first page when the clear button was clicked", function () {
+    var filter;
+
+    runs(function () {
+      collection = new Backbone.PageableCollection([
+        {id: 1, name: "alice"},
+        {id: 2, name: "amanda"}], {
+        state: {
+          pageSize: 1,
+        },
+        mode: "client"
+      });
+      filter = new Backgrid.Extension.ClientSideFilter({
+        collection: collection,
+        fields: ["name"]
+      });
+      filter.render();
+      filter.searchBox().val("a").keydown().keyup();
+      collection.getPage(2);
+      filter.clearButton().click();
+    });
+    waitsFor(function () {
+      return collection.state.currentPage === 1;
+    }, "collection.state.currentPage to become 1", 500);
+    runs(function () {
+      expect(collection.length).toBe(1);
+      expect(filter.shadowCollection.at(0).id).toBe(1);
+      expect(filter.shadowCollection.at(1).id).toBe(2);
+      expect(collection.state.totalRecords).toBe(2);
+      expect(collection.at(0).toJSON()).toEqual({id: 1, name: "alice"});
     });
   });
 
@@ -545,7 +576,7 @@ describe("A LunrFilter", function () {
     });
 
     runs(function () {
-      filter.searchBox().val("crap").keydown();
+      filter.searchBox().val("crap").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 1;
@@ -577,7 +608,7 @@ describe("A LunrFilter", function () {
     });
 
     runs(function () {
-      filter.searchBox().val("fat").keydown();
+      filter.searchBox().val("fat").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 2;
@@ -605,21 +636,21 @@ describe("A LunrFilter", function () {
     });
 
     runs(function () {
-      filter.searchBox().val("crap").keydown();
+      filter.searchBox().val("crap").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 0;
     }, "collection.length to become 0", 500);
 
     runs(function () {
-      filter.searchBox().val("alice").keydown();
+      filter.searchBox().val("alice").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 0;
     }, "collection.length to become 0", 500);
 
     runs(function () {
-      filter.searchBox().val("charlie").keydown();
+      filter.searchBox().val("charlie").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 1;
@@ -629,7 +660,7 @@ describe("A LunrFilter", function () {
     });
 
     runs(function () {
-      filter.searchBox().val("doug").keydown();
+      filter.searchBox().val("doug").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 1 && collection.at(0).id === 4;
@@ -648,7 +679,7 @@ describe("A LunrFilter", function () {
     });
 
     runs(function () {
-      filter.searchBox().val("charlie").keydown();
+      filter.searchBox().val("charlie").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 1;
@@ -670,14 +701,14 @@ describe("A LunrFilter", function () {
     });
 
     runs(function () {
-      filter.searchBox().val("bob").keydown();
+      filter.searchBox().val("bob").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 0;
     }, "collection.length to become 0", 500);
 
     runs(function () {
-      filter.searchBox().val("alice").keydown();
+      filter.searchBox().val("alice").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 1;
@@ -700,20 +731,88 @@ describe("A LunrFilter", function () {
     });
 
     runs(function () {
-      filter.searchBox().val("alice").keydown();
+      filter.searchBox().val("alice").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 0;
     }, "collection.length to become 0", 500);
 
     runs(function () {
-      filter.searchBox().val("charlie").keydown();
+      filter.searchBox().val("charlie").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 1;
     }, "collection.length to become 1", 500);
 
     runs(function () {
+      expect(collection.at(0).id).toBe(1);
+    });
+  });
+
+  it("goes back to the first page when the query changes", function () {
+    var filter;
+
+    runs(function () {
+      collection = new Backbone.PageableCollection([
+        {id: 1, name: "alice", bio: "a fat cat sat on a mat and ate a fat rat"},
+        {id: 2, name: "bob", bio: "he is fat but does not crap"}
+      ], {
+        state: {
+          pageSize: 1,
+        },
+        mode: "client"
+      });
+      filter = new Backgrid.Extension.LunrFilter({
+        collection: collection,
+        fields: {name: 1, bio: 10}
+      });
+      filter.render();
+      collection.getPage(2);
+      filter.searchBox().val("fat").keydown().keyup();
+    });
+    waitsFor(function () {
+      return collection.state.currentPage === 1;
+    }, "collection.state.currentPage to become 1", 500);
+    runs(function () {
+      expect(collection.length).toBe(1);
+      expect(filter.shadowCollection.at(0).id).toBe(1);
+      expect(filter.shadowCollection.at(1).id).toBe(2);
+      expect(collection.state.currentPage).toBe(1);
+      expect(collection.state.totalRecords).toBe(2);
+      expect(collection.at(0).id).toBe(2);
+    });
+  });
+
+  it("goes back to the first page when the clear button was clicked", function () {
+    var filter;
+
+    runs(function () {
+      collection = new Backbone.PageableCollection([
+        {id: 1, name: "alice", bio: "a fat cat sat on a mat and ate a fat rat"},
+        {id: 2, name: "bob", bio: "he is fat but does not crap"}
+      ], {
+        state: {
+          pageSize: 1,
+        },
+        mode: "client"
+      });
+      filter = new Backgrid.Extension.LunrFilter({
+        collection: collection,
+        fields: {name: 1, bio: 10}
+      });
+      filter.render();
+      filter.searchBox().val("fat").keydown().keyup();
+      collection.getPage(2);
+      filter.clearButton().click();
+    });
+    waitsFor(function () {
+      return collection.state.currentPage === 1;
+    }, "collection.state.currentPage to become 1", 500);
+    runs(function () {
+      expect(collection.length).toBe(1);
+      expect(filter.shadowCollection.at(0).id).toBe(1);
+      expect(filter.shadowCollection.at(1).id).toBe(2);
+      expect(collection.state.totalRecords).toBe(2);
       expect(collection.at(0).id).toBe(1);
     });
   });
