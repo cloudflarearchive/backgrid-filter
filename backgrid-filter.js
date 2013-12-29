@@ -317,6 +317,7 @@
     */
     clear: function () {
       this.searchBox().val(null);
+      this.showClearButtonMaybe();
       this.collection.reset(this.shadowCollection.models, {reindex: false});
     }
 
@@ -442,18 +443,18 @@
     */
     search: function () {
       var col = this.collection;
-      if (_.isEmpty(this.searchBox().val())) {
-    	  col.reset(this.shadowCollection.toArray(), {reindex: false});
-    	  return;
+      if (!this.searchBox().val()) {
+        col.reset(this.shadowCollection.toArray(), {reindex: false});
+        return;
       }
-    	
+
       var searchResults = this.index.search(this.searchBox().val());
       var models = [];
       for (var i = 0; i < searchResults.length; i++) {
         var result = searchResults[i];
         models.push(this.shadowCollection.get(result.ref));
       }
-      
+
       if (col.pageableCollection) col.pageableCollection.getFirstPage({silent: true});
       col.reset(models, {reindex: false});
     }

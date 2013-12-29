@@ -217,8 +217,9 @@ describe("A ServerSideFilter", function () {
     });
     filter.render();
     filter.searchBox().val("query");
-    filter.$el.find("a[data-backgrid-action=clear]").click();
+    filter.clearButton().click();
     expect(filter.searchBox().val()).toBe("");
+    expect(filter.clearButton().css("display")).toBe("none");
     collection.fetch.reset();
   });
 
@@ -227,13 +228,13 @@ describe("A ServerSideFilter", function () {
       collection: collection
     });
     filter.render();
-    expect(filter.$el.find("a[data-backgrid-action=clear]").css("display")).toBe("none");
+    expect(filter.clearButton().css("display")).toBe("none");
 
-    filter.searchBox().val("query").trigger("keyup");
-    expect(filter.$el.find("a[data-backgrid-action=clear]").css("display")).toBe("inline");
+    filter.searchBox().val("query").keyup();
+    expect(filter.clearButton().css("display")).not.toBe("none");
 
-    filter.searchBox().val(null).trigger("keyup");
-    expect(filter.$el.find("a[data-backgrid-action=clear]").css("display")).toBe("none");
+    filter.searchBox().val(null).keyup();
+    expect(filter.clearButton().css("display")).toBe("none");
   });
 
 });
@@ -277,7 +278,7 @@ describe("A ClientSideFilter", function () {
     });
 
     runs(function () {
-      filter.$el.find("a[data-backgrid-action=clear]").click();
+      filter.clearButton().click();
     });
     waitsFor(function () {
       return collection.length === 3;
@@ -453,6 +454,69 @@ describe("A ClientSideFilter", function () {
     });
   });
 
+  it("can clear the search box and reset the collection when the clear button is clicked", function () {
+    var filter;
+
+    runs(function () {
+      filter = new Backgrid.Extension.ClientSideFilter({
+        collection: collection,
+        fields: ["name"]
+      });
+      filter.render();
+    });
+
+    runs(function() {
+      filter.searchBox().val("alice").keydown().keyup();
+    });
+    waitsFor(function () {
+      return collection.length === 1;
+    }, "collection.length to become 1", 500);
+
+    runs(function () {
+      filter.clearButton().click();
+    });
+    waitsFor(function () {
+      return collection.length === 3;
+    }, "collection.length to become 2", 500);
+    runs(function () {
+      expect(filter.searchBox().val()).toBe('');
+      expect(collection.at(0).id).toBe(1);
+      expect(collection.at(1).id).toBe(2);
+      expect(collection.at(2).id).toBe(3);
+    });
+  });
+
+  it("shows the clear button when the search box has text entered, hides it otherwise", function () {
+    var filter;
+
+    runs(function () {
+      filter = new Backgrid.Extension.ClientSideFilter({
+        collection: collection,
+        fields: ["name"]
+      });
+      filter.render();
+      filter.searchBox().val("bob").keydown().keyup();
+    });
+
+    waitsFor(function () {
+      return collection.length == 1;
+    }, "collection.length to become 1", 500);
+
+    runs(function() {
+      expect(filter.clearButton().css("display")).not.toBe("none");
+      filter.searchBox().val(null).keydown().keyup();
+    });
+
+    waitsFor(function () {
+      return collection.length == 3;
+    }, "collection.length to become 3", 500);
+
+    runs(function() {
+      expect(filter.clearButton().css("display")).toBe("none");
+    });
+
+  });
+
 });
 
 describe("A LunrFilter", function () {
@@ -491,7 +555,7 @@ describe("A LunrFilter", function () {
     });
 
     runs(function () {
-      filter.$el.find("a[data-backgrid-action=clear]").click();
+      filter.clearButton().click();
     });
     waitsFor(function () {
       return collection.length === 2;
@@ -666,14 +730,14 @@ describe("A LunrFilter", function () {
     });
 
     runs(function() {
-      filter.searchBox().val("crap").keydown();
+      filter.searchBox().val("crap").keydown().keyup();
     });
     waitsFor(function () {
       return collection.length === 1;
     }, "collection.length to become 1", 500);
 
     runs(function () {
-      filter.$el.find("a[data-backgrid-action=clear]").click();
+      filter.clearButton().click();
     });
     waitsFor(function () {
       return collection.length === 2;
@@ -683,6 +747,37 @@ describe("A LunrFilter", function () {
       expect(collection.at(0).id).toBe(1);
       expect(collection.at(1).id).toBe(2);
     });
+  });
+
+  it("shows the clear button when the search box has text entered, hides it otherwise", function () {
+    var filter;
+
+    runs(function () {
+      filter = new Backgrid.Extension.LunrFilter({
+        collection: collection,
+        fields: {name: 1, bio: 10}
+      });
+      filter.render();
+      filter.searchBox().val("bob").keydown().keyup();
+    });
+
+    waitsFor(function () {
+      return collection.length == 1;
+    }, "collection.length to become 1", 500);
+
+    runs(function() {
+      expect(filter.clearButton().css("display")).not.toBe("none");
+      filter.searchBox().val(null).keydown().keyup();
+    });
+
+    waitsFor(function () {
+      return collection.length == 2;
+    }, "collection.length to become 2", 500);
+
+    runs(function() {
+      expect(filter.clearButton().css("display")).toBe("none");
+    });
+
   });
 
 });
