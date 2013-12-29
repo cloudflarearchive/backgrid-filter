@@ -444,7 +444,7 @@
     search: function () {
       var col = this.collection;
       if (!this.searchBox().val()) {
-        col.reset(this.shadowCollection.toArray(), {reindex: false});
+        col.reset(this.shadowCollection.models, {reindex: false});
         return;
       }
 
