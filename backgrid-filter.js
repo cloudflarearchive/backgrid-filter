@@ -119,21 +119,17 @@
       if (e) e.preventDefault();
 
       var data = {};
+      var query = this.searchBox().val();
+      if (query) data[this.name] = query;
 
       var collection = this.collection;
 
       // go back to the first page on search
       if (Backbone.PageableCollection &&
-          collection instanceof Backbone.PageableCollection &&
-          collection.mode == "server") {
-        collection.state.currentPage = collection.state.firstPage;
+          collection instanceof Backbone.PageableCollection) {
+        collection.getFirstPage({data: data, reset: true, fetch: true});
       }
-      else {
-        var query = this.searchBox().val();
-        if (query) data[this.name] = query;
-      }
-
-      collection.fetch({data: data, reset: true});
+      else collection.fetch({data: data, reset: true});
     },
 
     /**
@@ -152,12 +148,10 @@
 
       // go back to the first page on clear
       if (Backbone.PageableCollection &&
-          collection instanceof Backbone.PageableCollection &&
-          collection.mode == "server") {
-        collection.state.currentPage = collection.state.firstPage;
+          collection instanceof Backbone.PageableCollection) {
+        collection.getFirstPage({reset: true, fetch: true});
       }
-
-      collection.fetch({reset: true});
+      else collection.fetch({reset: true});
     },
 
     /**
@@ -332,7 +326,7 @@
     },
 
     /**
-       Clears the search box and reset the collection to its original. 
+       Clears the search box and reset the collection to its original.
 
        If the collection is a PageableCollection, clearing will go back to the
        first page.
