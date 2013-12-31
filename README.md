@@ -8,5 +8,5 @@ Dependencies
 
 Usage
 =====
-See the [Filter](http://wyuenho.github.com/backgrid/#api-filter) section in
+See the [Filter](http://backgridjs.com/ref/extensions/filter.html) section in
 the documentation.
