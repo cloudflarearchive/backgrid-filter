@@ -15,10 +15,7 @@
                              require("backbone"));
   }
   // Browser
-  else if (typeof _ !== "undefined" &&
-    typeof Backbone !== "undefined") {
-    factory(window, _, Backbone);
-  }
+  else factory(this, this._, this.Backbone);
 }(function (root, _, Backbone) {
 
   "use strict";
@@ -329,6 +326,76 @@ _.extend(NumberFormatter.prototype, {
 });
 
 /**
+   A number formatter that converts a floating point number, optionally
+   multiplied by a multiplier, to a percentage string and vice versa.
+
+   @class Backgrid.PercentFormatter
+   @extends Backgrid.NumberFormatter
+   @constructor
+   @throws {RangeError} If decimals < 0 or > 20.
+ */
+var PercentFormatter = Backgrid.PercentFormatter = function () {
+  Backgrid.NumberFormatter.apply(this, arguments);
+};
+
+PercentFormatter.prototype = new Backgrid.NumberFormatter(),
+
+_.extend(PercentFormatter.prototype, {
+
+  /**
+     @member Backgrid.PercentFormatter
+     @cfg {Object} options
+
+     @cfg {number} [options.multiplier=1] The number used to multiply the model
+     value for display.
+
+     @cfg {string} [options.symbol='%'] The symbol to append to the percentage
+     string.
+   */
+  defaults: _.extend({}, NumberFormatter.prototype.defaults, {
+    multiplier: 1,
+    symbol: "%"
+  }),
+
+  /**
+     Takes a floating point number, where the number is first multiplied by
+     `multiplier`, then converted to a formatted string like
+     NumberFormatter#fromRaw, then finally append `symbol` to the end.
+
+     @member Backgrid.PercentFormatter
+     @param {number} rawValue
+     @param {Backbone.Model} model Used for more complicated formatting
+     @return {string}
+  */
+  fromRaw: function (number, model) {
+    var args = [].slice.call(arguments, 1);
+    args.unshift(number * this.multiplier);
+    return (NumberFormatter.prototype.fromRaw.apply(this, args) || "0") + this.symbol;
+  },
+
+  /**
+     Takes a string, possibly appended with `symbol` and/or `decimalSeparator`,
+     and convert it back to a number for the model like NumberFormatter#toRaw,
+     and then dividing it by `multiplier`.
+
+     @member Backgrid.PercentFormatter
+     @param {string} formattedData
+     @param {Backbone.Model} model Used for more complicated formatting
+     @return {number|undefined} Undefined if the string cannot be converted to
+     a number.
+  */
+  toRaw: function (formattedValue, model) {
+    var tokens = formattedValue.split(this.symbol);
+    if (tokens && tokens[0] && tokens[1] === "" || tokens[1] == null) {
+      var rawValue = NumberFormatter.prototype.toRaw.call(this, tokens[0]);
+      if (_.isUndefined(rawValue)) return rawValue;
+      return rawValue / this.multiplier;
+    }
+  }
+
+});
+
+/**
    Formatter to converts between various datetime formats.
 
    This class only understands ISO-8601 formatted datetime strings and UNIX
@@ -523,6 +590,11 @@ _.extend(EmailFormatter.prototype, {
 /**
    Formatter for SelectCell.
 
+   If the type of a model value is not a string, it is expected that a subclass
+   of this formatter is provided to the SelectCell, with #toRaw overridden to
+   convert the string value returned from the DOM back to whatever value is
+   expected in the model.
+
    @class Backgrid.SelectFormatter
    @extends Backgrid.CellFormatter
    @constructor
@@ -543,7 +615,6 @@ _.extend(SelectFormatter.prototype, {
     return _.isArray(rawValue) ? rawValue : rawValue != null ? [rawValue] : [];
   }
 });
-
 
 /*
   backgrid
@@ -645,7 +716,7 @@ var InputCellEditor = Backgrid.InputCellEditor = CellEditor.extend({
      exists.
   */
   render: function () {
-    var model = this.model
+    var model = this.model;
     this.$el.val(this.formatter.fromRaw(model.get(this.column.get("name")), model));
     return this;
   },
@@ -795,9 +866,9 @@ var Cell = Backgrid.Cell = Backbone.View.extend({
                     }
                   });
 
-    if (column.get("editable")) $el.addClass("editable");
-    if (column.get("sortable")) $el.addClass("sortable");
-    if (column.get("renderable")) $el.addClass("renderable");
+    if (Backgrid.callByNeed(column.editable(), column, model)) $el.addClass("editable");
+    if (Backgrid.callByNeed(column.sortable(), column, model)) $el.addClass("sortable");
+    if (Backgrid.callByNeed(column.renderable(), column, model)) $el.addClass("renderable");
   },
 
   /**
@@ -1048,6 +1119,43 @@ var IntegerCell = Backgrid.IntegerCell = NumberCell.extend({
      @property {number} decimals Must be an integer.
   */
   decimals: 0
+});
+
+/**
+   A PercentCell is another Backgrid.NumberCell that takes a floating number,
+   optionally multiplied by a multiplier and display it as a percentage.
+
+   @class Backgrid.PercentCell
+   @extends Backgrid.NumberCell
+ */
+var PercentCell = Backgrid.PercentCell = NumberCell.extend({
+
+  /** @property */
+  className: "percent-cell",
+
+  /** @property {number} [multiplier=1] */
+  multiplier: PercentFormatter.prototype.defaults.multiplier,
+
+  /** @property {string} [symbol='%'] */
+  symbol: PercentFormatter.prototype.defaults.symbol,
+
+  /** @property {Backgrid.CellFormatter} [formatter=Backgrid.PercentFormatter] */
+  formatter: PercentFormatter,
+
+  /**
+     Initializes this cell and the percent formatter.
+
+     @param {Object} options
+     @param {Backbone.Model} options.model
+     @param {Backgrid.Column} options.column
+  */
+  initialize: function () {
+    PercentCell.__super__.initialize.apply(this, arguments);
+    var formatter = this.formatter;
+    formatter.multiplier = this.multiplier;
+    formatter.symbol = this.symbol;
+  }
+
 });
 
 /**
@@ -1395,10 +1503,7 @@ var SelectCellEditor = Backgrid.SelectCellEditor = CellEditor.extend({
              command.moveUp() || command.moveDown() || e.type == "blur") {
       e.preventDefault();
       e.stopPropagation();
-      if (e.type == "blur" && this.$el.find("option").length === 1) {
-        model.set(column.get("name"), this.formatter.toRaw(this.$el.val(), model));
-      }
-      model.trigger("backgrid:edited", model, column, new Command(e));
+      this.save(e);
     }
   }
 
@@ -1591,23 +1696,23 @@ var Column = Backgrid.Column = Backbone.Model.extend({
      @cfg {string|Backgrid.HeaderCell} [defaults.headerCell] The default header
      cell type.
 
-     @cfg {boolean|string} [defaults.sortable=true] Whether this column is
-     sortable. If the value is a string, a method will the same name will be
-     looked up from the column instance to determine whether the column should
-     be sortable. The method's signature must be `function (Backgrid.Column,
-     Backbone.Model): boolean`.
+     @cfg {boolean|string|function(): boolean} [defaults.sortable=true] Whether
+     this column is sortable. If the value is a string, a method will the same
+     name will be looked up from the column instance to determine whether the
+     column should be sortable. The method's signature must be `function
+     (Backgrid.Column, Backbone.Model): boolean`.
 
-     @cfg {boolean|string} [defaults.editable=true] Whether this column is
-     editable. If the value is a string, a method will the same name will be
-     looked up from the column instance to determine whether the column should
-     be editable. The method's signature must be `function (Backgrid.Column,
-     Backbone.Model): boolean`.
+     @cfg {boolean|string|function(): boolean} [defaults.editable=true] Whether
+     this column is editable. If the value is a string, a method will the same
+     name will be looked up from the column instance to determine whether the
+     column should be editable. The method's signature must be `function
+     (Backgrid.Column, Backbone.Model): boolean`.
 
-     @cfg {boolean|string} [defaults.renderable=true] Whether this column is
-     renderable. If the value is a string, a method will the same name will be
-     looked up from the column instance to determine whether the column should
-     be renderable. The method's signature must be `function (Backrid.Column,
-     Backbone.Model): boolean`.
+     @cfg {boolean|string|function(): boolean} [defaults.renderable=true]
+     Whether this column is renderable. If the value is a string, a method will
+     the same name will be looked up from the column instance to determine
+     whether the column should be renderable. The method's signature must be
+     `function (Backrid.Column, Backbone.Model): boolean`.
 
      @cfg {Backgrid.CellFormatter | Object | string} [defaults.formatter] The
      formatter to use to convert between raw model values and user input.
@@ -1655,11 +1760,11 @@ var Column = Backgrid.Column = Backbone.Model.extend({
 
      @param {string|Backgrid.HeaderCell} [attrs.headerCell]
 
-     @param {boolean|string} [attrs.sortable=true]
+     @param {boolean|string|function(): boolean} [attrs.sortable=true]
 
-     @param {boolean|string} [attrs.editable=true]
+     @param {boolean|string|function(): boolean} [attrs.editable=true]
 
-     @param {boolean|string} [attrs.renderable=true]
+     @param {boolean|string|function(): boolean} [attrs.renderable=true]
 
      @param {Backgrid.CellFormatter | Object | string} [attrs.formatter]
 
@@ -1678,7 +1783,7 @@ var Column = Backgrid.Column = Backbone.Model.extend({
      - Backgrid.Cell
      - Backgrid.CellFormatter
    */
-  initialize: function (attrs) {
+  initialize: function () {
     if (!this.has("label")) {
       this.set({ label: this.get("name") }, { silent: true });
     }
@@ -1738,6 +1843,8 @@ _.each(["sortable", "renderable", "editable"], function (key) {
   Column.prototype[key] = function () {
     var value = this.get(key);
     if (_.isString(value)) return this[value];
+    else if (_.isFunction(value)) return value;
+
     return !!value;
   };
 });
@@ -1884,14 +1991,14 @@ var EmptyRow = Backgrid.EmptyRow = Backbone.View.extend({
   /** @property */
   tagName: "tr",
 
-  /** @property */
+  /** @property {string|function(): string} */
   emptyText: null,
 
   /**
      Initializer.
 
      @param {Object} options
-     @param {string} options.emptyText
+     @param {string|function(): string} options.emptyText
      @param {Backbone.Collection.<Backgrid.Column>|Array.<Backgrid.Column>|Array.<Object>} options.columns Column metadata.
    */
   initialize: function (options) {
@@ -1907,7 +2014,7 @@ var EmptyRow = Backgrid.EmptyRow = Backbone.View.extend({
 
     var td = document.createElement("td");
     td.setAttribute("colspan", this.columns.length);
-    td.textContent = this.emptyText;
+    td.textContent = _.result(this, "emptyText");
 
     this.el.setAttribute("class", "empty");
     this.el.appendChild(td);
@@ -1956,9 +2063,7 @@ var HeaderCell = Backgrid.HeaderCell = Backbone.View.extend({
       this.column = new Column(this.column);
     }
 
-    this.listenTo(this.collection, "backgrid:sort", this._resetCellDirection);
-
-    var column = this.column, $el = this.$el;
+    var column = this.column, collection = this.collection, $el = this.$el;
 
     this.listenTo(column, "change:editable change:sortable change:renderable",
                   function (column) {
@@ -1972,9 +2077,11 @@ var HeaderCell = Backgrid.HeaderCell = Backbone.View.extend({
 
     this.listenTo(column, "change:name change:label", this.render);
 
-    if (column.get("editable")) $el.addClass("editable");
-    if (column.get("sortable")) $el.addClass("sortable");
-    if (column.get("renderable")) $el.addClass("renderable");
+    if (Backgrid.callByNeed(column.editable(), column, collection)) $el.addClass("editable");
+    if (Backgrid.callByNeed(column.sortable(), column, collection)) $el.addClass("sortable");
+    if (Backgrid.callByNeed(column.renderable(), column, collection)) $el.addClass("renderable");
+
+    this.listenTo(collection, "backgrid:sort", this._resetCellDirection);
   },
 
   /**
@@ -1990,7 +2097,7 @@ var HeaderCell = Backgrid.HeaderCell = Backbone.View.extend({
       var direction = this.column.get('direction');
       if (direction) this.$el.removeClass(direction);
       if (dir) this.$el.addClass(dir);
-      this.column.set('direction', dir)
+      this.column.set('direction', dir);
     }
 
     return this.column.get('direction');
@@ -2044,10 +2151,15 @@ var HeaderCell = Backgrid.HeaderCell = Backbone.View.extend({
   render: function () {
     this.$el.empty();
     var column = this.column;
-    var $label = $("<a>").text(column.get("label"));
     var sortable = Backgrid.callByNeed(column.sortable(), column, this.collection);
-    if (sortable) $label.append("<b class='sort-caret'></b>");
-    this.$el.append($label);
+    var label;
+    if(sortable){
+      label = $("<a>").text(column.get("label")).append("<b class='sort-caret'></b>");
+    } else {
+      label = document.createTextNode(column.get("label"));
+    }
+
+    this.$el.append(label);
     this.$el.addClass(column.get("name"));
     this.delegateEvents();
     this.direction(column.get("direction"));
@@ -2176,7 +2288,7 @@ var Body = Backgrid.Body = Backbone.View.extend({
      @param {Backbone.Collection.<Backgrid.Column>|Array.<Backgrid.Column>|Array.<Object>} options.columns
      Column metadata.
      @param {Backgrid.Row} [options.row=Backgrid.Row] The Row class to use.
-     @param {string} [options.emptyText] The text to display in the empty row.
+     @param {string|function(): string} [options.emptyText] The text to display in the empty row.
 
      @throws {TypeError} If options.columns or options.collection is undefined.
 
