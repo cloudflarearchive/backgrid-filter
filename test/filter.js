@@ -21,6 +21,14 @@ describe("A ServerSideFilter", function () {
     $.ajax = ajax;
   });
 
+  it("render the compiled template supplied from the constructor", function () {
+    var filter = new Backgrid.Extension.ServerSideFilter({
+      template: _.template("<div>hello world!</div>")
+    });
+    filter.render();
+    expect(filter.el.innerHTML.toLowerCase()).toBe("<div>hello world!</div>");
+  });
+
   it("can render a search box with and optional name and a placeholder", function () {
     var filter = new Backgrid.Extension.ServerSideFilter({
       collection: collection,

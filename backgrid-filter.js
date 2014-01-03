@@ -65,11 +65,13 @@
        @param {Backbone.Collection} options.collection
        @param {string} [options.name]
        @param {string} [options.placeholder]
+       @param {function(Object): string} [options.template]
     */
     initialize: function (options) {
       ServerSideFilter.__super__.initialize.apply(this, arguments);
       this.name = options.name || this.name;
       this.placeholder = options.placeholder || this.placeholder;
+      this.template = options.template || this.template;
 
       // Persist the query on pagination
       var collection = this.collection, self = this;
