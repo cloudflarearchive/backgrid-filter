@@ -24,6 +24,7 @@
 
 .backgrid-filter.form-search {
   position: relative;
+  width: 248px;
   height: 30px;
   margin: 20px;
 }
@@ -86,7 +87,7 @@
 .backgrid-filter .clear {
   position: absolute;
   top: 50%;
-  right: 7px;
+  right: 14px;
   width: 10px;
   height: 20px;
   margin-top: -10px;
