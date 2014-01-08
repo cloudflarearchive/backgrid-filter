@@ -165,6 +165,14 @@
 }
 
 /*
+ * Remove the default clear button on IE
+ */
+
+.backgrid-filter input[type="search"]::-ms-clear {
+  display: none;
+}
+
+/*
  * Remove inner padding and border in Firefox 4+.
  */
 
