@@ -100,6 +100,11 @@
         .cstat-no { background: #fc8c84; color: #111; }
         .fstat-no { background: #ffc520; color: #111 !important; }
         .cbranch-no { background:  yellow !important; color: #111; }
+
+        .cstat-skip { background: #ddd; color: #111; }
+        .fstat-skip { background: #ddd; color: #111 !important; }
+        .cbranch-skip { background: #ddd !important; color: #111; }
+
         .missing-if-branch {
             display: inline-block;
             margin-right: 10px;
@@ -107,9 +112,18 @@
             padding: 0 4px;
             background: black;
             color: yellow;
-            xtext-decoration: line-through;
         }
-        .missing-if-branch .typ {
+
+        .skip-if-branch {
+            display: none;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: #ccc;
+            color: white;
+        }
+
+        .missing-if-branch .typ, .skip-if-branch .typ {
             color: inherit !important;
         }
 
@@ -176,6 +190,8 @@
             margin: 0 !important;
         }
         .com { color: #999 !important; }
+        .ignore-none { color: #999; font-weight: normal; }
+
     </style>
 </head>
 <body>
@@ -194,6 +210,7 @@
         
         Lines: <span class="metric">95.97% <small>(119 / 124)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
     <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">./</a> &#187; ckgrid-filter.js</div>
 </div>
@@ -1183,7 +1200,7 @@
 (function (root, factory) {
 &nbsp;
   // CommonJS
-  <span class="missing-if-branch" title="if path not taken"" >I</span>if (typeof exports == "object") {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof exports == "object") {
 <span class="cstat-no" title="statement not covered" >    (<span class="fstat-no" title="function not covered" >function () {</span></span>
 <span class="cstat-no" title="statement not covered" >      var lunr;</span>
 <span class="cstat-no" title="statement not covered" >      try { <span class="cstat-no" title="statement not covered" >lunr = require("lunr"); </span>} catch (e) {}</span>
@@ -1293,7 +1310,7 @@
        first page.
     */
     search: function (e) {
-      <span class="missing-if-branch" title="else path not taken"" >E</span>if (e) e.preventDefault();
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (e) e.preventDefault();
 &nbsp;
       var data = {};
       var query = this.searchBox().val();
@@ -1317,7 +1334,7 @@
        first page.
     */
     clear: function (e) {
-      <span class="missing-if-branch" title="else path not taken"" >E</span>if (e) e.preventDefault();
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (e) e.preventDefault();
       this.searchBox().val(null);
       this.showClearButtonMaybe();
 &nbsp;
@@ -1424,7 +1441,7 @@
     },
 &nbsp;
     _debounceMethods: function (methodNames) {
-      <span class="missing-if-branch" title="if path not taken"" >I</span>if (_.isString(methodNames)) <span class="cstat-no" title="statement not covered" >methodNames = [methodNames];</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (_.isString(methodNames)) <span class="cstat-no" title="statement not covered" >methodNames = [methodNames];</span>
 &nbsp;
       this.undelegateEvents();
 &nbsp;
@@ -1602,7 +1619,7 @@
     addToIndex: function (model) {
       var index = this.index;
       var doc = model.toJSON();
-      <span class="missing-if-branch" title="if path not taken"" >I</span>if (index.documentStore.has(doc[this.ref])) <span class="cstat-no" title="statement not covered" >index.update(doc);</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (index.documentStore.has(doc[this.ref])) <span class="cstat-no" title="statement not covered" >index.update(doc);</span>
       else index.add(doc);
     },
 &nbsp;
@@ -1614,7 +1631,7 @@
     removeFromIndex: function (model) {
       var index = this.index;
       var doc = model.toJSON();
-      <span class="missing-if-branch" title="else path not taken"" >E</span>if (index.documentStore.has(doc[this.ref])) index.remove(doc);
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (index.documentStore.has(doc[this.ref])) index.remove(doc);
     },
 &nbsp;
     /**
@@ -1624,7 +1641,7 @@
     */
     updateIndex: function (model) {
       var changed = model.changedAttributes();
-      <span class="missing-if-branch" title="else path not taken"" >E</span>if (changed &amp;&amp; !_.isEmpty(_.intersection(_.keys(this.fields),
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (changed &amp;&amp; !_.isEmpty(_.intersection(_.keys(this.fields),
                                                _.keys(changed)))) {
         this.index.update(model.toJSON());
       }
@@ -1665,7 +1682,7 @@
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jan 14 2014 18:29:59 GMT+0800 (HKT)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Jan 18 2014 02:27:24 GMT+0800 (HKT)</div>
 </div>
 
 <script src="../prettify.js"></script>
