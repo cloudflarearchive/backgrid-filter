@@ -88,7 +88,7 @@ var Backgrid = root.Backgrid = {
 
     var context = arguments[1];
     var args = [].slice.call(arguments, 2);
-    return value.apply(context, !!(args + '') ? args : void 0);
+    return value.apply(context, !!(args + '') ? args : []);
   }
 
 };
@@ -1455,7 +1455,7 @@ var SelectCellEditor = Backgrid.SelectCellEditor = CellEditor.extend({
         this.$el.append(this.template({
           text: optionText,
           value: optionValue,
-          selected: selectedValues.indexOf(optionValue) > -1
+          selected: _.indexOf(selectedValues, optionValue) > -1
         }));
       }
       else if (_.isObject(optionValue)) {
@@ -2011,9 +2011,9 @@ var EmptyRow = Backgrid.EmptyRow = Backbone.View.extend({
 
     var td = document.createElement("td");
     td.setAttribute("colspan", this.columns.length);
-    td.textContent = _.result(this, "emptyText");
+    td.appendChild(document.createTextNode(_.result(this, "emptyText")));
 
-    this.el.setAttribute("class", "empty");
+    this.el.className = "empty";
     this.el.appendChild(td);
 
     return this;
@@ -2078,7 +2078,7 @@ var HeaderCell = Backgrid.HeaderCell = Backbone.View.extend({
     if (Backgrid.callByNeed(column.sortable(), column, collection)) $el.addClass("sortable");
     if (Backgrid.callByNeed(column.renderable(), column, collection)) $el.addClass("renderable");
 
-    this.listenTo(collection, "sort", this.removeCellDirection);
+    this.listenTo(collection.fullCollection || collection, "sort", this.removeCellDirection);
   },
 
   /**
