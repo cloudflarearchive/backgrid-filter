@@ -61,6 +61,14 @@
     placeholder: null,
 
     /**
+       @property [wait=false] The time in milliseconds to wait since the last
+       change to the search box's value before searching. This value can be
+       adjusted depending on how often the search box is used and how large the
+       search index is.  For ServerSideFilter this is turned off by default.
+    */
+    wait: false,
+
+    /**
        @param {Object} options
        @param {Backbone.Collection} options.collection
        @param {string} [options.name]
@@ -72,6 +80,12 @@
       this.name = options.name || this.name;
       this.placeholder = options.placeholder || this.placeholder;
       this.template = options.template || this.template;
+      this.wait = options.wait || this.wait;
+
+      if (this.wait !== false) {
+        this.events["keydown input[type=search]"] = "search";
+        this._debounceMethods(["search", "clear"]);
+      }
 
       // Persist the query on pagination
       var collection = this.collection, self = this;
@@ -83,7 +97,20 @@
         };
       }
     },
+	
+    _debounceMethods: function(methodNames) {
+      if (_.isString(methodNames)) methodNames = [methodNames];
 
+      this.undelegateEvents();
+
+      for (var i = 0, l = methodNames.length; i < l; i++) {
+        var methodName = methodNames[i];
+        var method = this[methodName];
+        this[methodName] = _.debounce(method, this.wait);
+      }
+
+      this.delegateEvents();
+    },
     /**
        Event handler. Show the clear button when the search box has text, hide
        it otherwise.
@@ -246,20 +273,6 @@
           shadowCollection.reset(col.models);
         }
       });
-    },
-
-    _debounceMethods: function (methodNames) {
-      if (_.isString(methodNames)) methodNames = [methodNames];
-
-      this.undelegateEvents();
-
-      for (var i = 0, l = methodNames.length; i < l; i++) {
-        var methodName = methodNames[i];
-        var method = this[methodName];
-        this[methodName] = _.debounce(method, this.wait);
-      }
-
-      this.delegateEvents();
     },
 
     /**
