@@ -309,6 +309,80 @@ describe("A ServerSideFilter", function () {
     expect(filter.clearButton().css("display")).toBe("none");
   });
 
+  it("submits the baseParams when searching", function () {
+    var url, data;
+
+    $.ajax = function (settings) {
+      url = settings.url;
+      data = settings.data;
+      settings.success({id: 1});
+    };
+
+    var filter = new Backgrid.Extension.ServerSideFilter({
+      collection: collection,
+      baseParams: {sticky: "arg val"}
+    });
+
+    filter.render();
+    filter.searchBox();
+    filter.$el.submit();
+
+    expect(url).toBe("http://www.example.com");
+    expect(data).toEqual({sticky: "arg val"});
+    expect(collection.length).toBe(1);
+    expect(collection.at(0).toJSON()).toEqual({id: 1});
+  });
+
+  it("merges the existing query with the baseParams query", function () {
+    var url, data;
+
+    $.ajax = function (settings) {
+      url = settings.url;
+      data = settings.data;
+      settings.success({id: 1});
+    };
+
+    var filter = new Backgrid.Extension.ServerSideFilter({
+      collection: collection
+      , baseParams: {sticky: "arg val", q: "base query "}
+    });
+
+    filter.render();
+    filter.searchBox().val("current    query");
+    filter.$el.submit();
+    expect(url).toBe("http://www.example.com");
+    expect(data).toEqual({sticky: "arg val", q: "base query current"});
+    expect(collection.length).toBe(1);
+    expect(collection.at(0).toJSON()).toEqual({id: 1});
+
+    filter.searchBox().val("another query");
+    filter.$el.submit();
+    expect(data).toEqual({sticky: "arg val", q: "base query another"});
+  });
+
+  it("can clear the search box and refetch using the baseParams upon clicking the cross", function () {
+    var data;
+
+    $.ajax = function (settings) {
+      data = settings.data;
+    };
+
+    var filter = new Backgrid.Extension.ServerSideFilter({
+      collection: collection
+      , baseParams: {sticky: "arg val", q: "base query"}
+    });
+
+    filter.render();
+    filter.searchBox().val("query");
+    filter.clearButton().click();
+    expect(filter.searchBox().val()).toBe("");
+    expect(filter.clearButton().css("display")).toBe("none");
+    expect(data).toEqual({sticky: "arg val", q: "base query"});
+
+    filter.searchBox().val("another query");
+    filter.clearButton().click();
+    expect(data).toEqual({sticky: "arg val", q: "base query"});
+  });
 });
 
 describe("A ClientSideFilter", function () {

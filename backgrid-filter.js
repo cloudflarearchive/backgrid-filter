@@ -61,6 +61,11 @@
     placeholder: null,
 
     /**
+      @property {string} [baseParams] Parameters to be added on every request
+    */
+    baseParams: null,
+
+    /**
        @param {Object} options
        @param {Backbone.Collection} options.collection
        @param {string} [options.name]
@@ -72,6 +77,7 @@
       this.name = options.name || this.name;
       this.placeholder = options.placeholder || this.placeholder;
       this.template = options.template || this.template;
+      this.baseParams = options.baseParams || this.baseParams;
 
       // Persist the query on pagination
       var collection = this.collection, self = this;
@@ -110,6 +116,38 @@
     },
 
     /**
+      Merges the baseParams query with the query string from the search box
+
+      Returns the new query string.
+     */
+    mergeQueryString: function (baseQueryString, queryString) {
+      var queryArray = _.uniq((baseQueryString + ' ' + queryString).match(/\S+/g));
+      return queryArray.join(' ');
+    },
+
+    /**
+      Returns the data object
+     */
+    parseQueryParams: function () {
+      var data;
+      var query = this.searchBox().val();
+
+      if (this.baseParams) {
+        data = _.clone(this.baseParams);
+
+        if (query && data[this.name]) {
+          query = this.mergeQueryString(data[this.name], query);
+        }
+      } else {
+        data = {};
+      }
+
+      if (query) data[this.name] = query;
+
+      return data;
+    },
+
+    /**
        Upon search form submission, this event handler constructs a query
        parameter object and pass it to Collection#fetch for server-side
        filtering.
@@ -120,10 +158,7 @@
     search: function (e) {
       if (e) e.preventDefault();
 
-      var data = {};
-      var query = this.searchBox().val();
-      if (query) data[this.name] = query;
-
+      var data = this.parseQueryParams();
       var collection = this.collection;
 
       // go back to the first page on search
@@ -147,13 +182,19 @@
       this.showClearButtonMaybe();
 
       var collection = this.collection;
+      var args = {reset: true};
 
       // go back to the first page on clear
       if (Backbone.PageableCollection &&
           collection instanceof Backbone.PageableCollection) {
         collection.getFirstPage({reset: true, fetch: true});
       }
-      else collection.fetch({reset: true});
+      else {
+        if (this.baseParams) {
+          args.data = this.baseParams;
+          collection.fetch(args);
+        }
+      }
     },
 
     /**
