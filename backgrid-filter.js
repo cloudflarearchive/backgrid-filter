@@ -129,15 +129,17 @@
       Returns the data object
      */
     parseQueryParams: function () {
-      var data = {};
+      var data;
       var query = this.searchBox().val();
 
       if (this.baseParams) {
-        data = this.baseParams;
+        data = _.clone(this.baseParams);
 
-        if (query && this.baseParams[this.name]) {
-          query = this.mergeQueryString(this.baseParams[this.name], query);
+        if (query && data[this.name]) {
+          query = this.mergeQueryString(data[this.name], query);
         }
+      } else {
+        data = {};
       }
 
       if (query) data[this.name] = query;

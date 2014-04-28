@@ -354,6 +354,10 @@ describe("A ServerSideFilter", function () {
     expect(data).toEqual({sticky: "arg val", q: "base query current"});
     expect(collection.length).toBe(1);
     expect(collection.at(0).toJSON()).toEqual({id: 1});
+
+    filter.searchBox().val("another query");
+    filter.$el.submit();
+    expect(data).toEqual({sticky: "arg val", q: "base query another"});
   });
 
   it("can clear the search box and refetch using the baseParams upon clicking the cross", function () {
@@ -373,6 +377,10 @@ describe("A ServerSideFilter", function () {
     filter.clearButton().click();
     expect(filter.searchBox().val()).toBe("");
     expect(filter.clearButton().css("display")).toBe("none");
+    expect(data).toEqual({sticky: "arg val", q: "base query"});
+
+    filter.searchBox().val("another query");
+    filter.clearButton().click();
     expect(data).toEqual({sticky: "arg val", q: "base query"});
   });
 });
