@@ -42,7 +42,7 @@
     className: "backgrid-filter form-search",
 
     /** @property {function(Object, ?Object=): string} template */
-    template: _.template('<span class="search">&nbsp;</span><input type="search" <% if (placeholder) { %> placeholder="<%- placeholder %>" <% } %> name="<%- name %>" /><a class="clear" data-backgrid-action="clear" href="#">&times;</a>', null, {variable: null}),
+    template: _.template('<span class="search">&nbsp;</span><input type="search" <% if (placeholder) { %> placeholder="<%- placeholder %>" <% } %> name="<%- name %>" <% if (value) { %> value="<%- value %>" <% } %>/><a class="clear" data-backgrid-action="clear" href="#">&times;</a>', null, {variable: null}),
 
     /** @property */
     events: {
@@ -54,6 +54,9 @@
     /** @property {string} [name='q'] Query key */
     name: "q",
 
+    /** @property {string} [value] The search box value.  */
+    value: null,
+
     /**
        @property {string} [placeholder] The HTML5 placeholder to appear beneath
        the search box.
@@ -64,12 +67,14 @@
        @param {Object} options
        @param {Backbone.Collection} options.collection
        @param {string} [options.name]
+       @param {string} [options.value]
        @param {string} [options.placeholder]
        @param {function(Object): string} [options.template]
     */
     initialize: function (options) {
       ServerSideFilter.__super__.initialize.apply(this, arguments);
       this.name = options.name || this.name;
+      this.value = options.value || this.value;
       this.placeholder = options.placeholder || this.placeholder;
       this.template = options.template || this.template;
 

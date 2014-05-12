@@ -29,14 +29,16 @@ describe("A ServerSideFilter", function () {
     expect(filter.el.innerHTML.toLowerCase()).toBe("<div>hello world!</div>");
   });
 
-  it("can render a search box with and optional name and a placeholder", function () {
+  it("can render a search box with an optional name, placeholder or value", function () {
     var filter = new Backgrid.Extension.ServerSideFilter({
       collection: collection,
       name: "name",
+      value: "value",
       placeholder: "placeholder"
     });
     filter.render();
     expect(filter.searchBox().attr("name")).toBe("name");
+    expect(filter.searchBox().attr("value")).toBe("value");
     expect(filter.searchBox().attr("placeholder")).toBe("placeholder");
 
     var filter = new Backgrid.Extension.ServerSideFilter({
@@ -44,20 +46,34 @@ describe("A ServerSideFilter", function () {
       name: "name"
     });
     filter.render();
-    expect(filter.searchBox().attr("placeholder")).toBeUndefined();
     expect(filter.searchBox().attr("name")).toBe("name");
+    expect(filter.searchBox().attr("value")).toBeUndefined();
+    expect(filter.searchBox().attr("placeholder")).toBeUndefined();
+
+    var filter = new Backgrid.Extension.ServerSideFilter({
+      collection: collection,
+      value: "value"
+    });
+    filter.render();
+    expect(filter.searchBox().attr("name")).toBe("q");
+    expect(filter.searchBox().attr("value")).toBe("value");
+    expect(filter.searchBox().attr("placeholder")).toBeUndefined();
 
     var filter = new Backgrid.Extension.ServerSideFilter({
       collection: collection,
       placeholder: "placeholder"
     });
     filter.render();
+    expect(filter.searchBox().attr("name")).toBe("q");
+    expect(filter.searchBox().attr("value")).toBeUndefined();
     expect(filter.searchBox().attr("placeholder")).toBe("placeholder");
 
     var filter = new Backgrid.Extension.ServerSideFilter({
       collection: collection
     });
     filter.render();
+    expect(filter.searchBox().attr("name")).toBe("q");
+    expect(filter.searchBox().attr("value")).toBeUndefined();
     expect(filter.searchBox().attr("placeholder")).toBeUndefined();
   });
 
