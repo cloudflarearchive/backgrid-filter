@@ -90,6 +90,15 @@
     },
 
     /**
+       Event handler. Clear the search box and reset the internal search value.
+     */
+    clearSearchBox: function() {
+      this.value = null;
+      this.searchBox().val(null);
+      this.showClearButtonMaybe();
+    },
+
+    /**
        Event handler. Show the clear button when the search box has text, hide
        it otherwise.
      */
@@ -114,6 +123,15 @@
       return this.$el.find("a[data-backgrid-action=clear]");
     },
 
+
+    /**
+       Returns the current search query.
+     */
+    query: function() {
+      this.value = this.searchBox().val();
+      return this.value;
+    },
+
     /**
        Upon search form submission, this event handler constructs a query
        parameter object and pass it to Collection#fetch for server-side
@@ -126,7 +144,7 @@
       if (e) e.preventDefault();
 
       var data = {};
-      var query = this.searchBox().val();
+      var query = this.query();
       if (query) data[this.name] = query;
 
       var collection = this.collection;
@@ -148,8 +166,7 @@
     */
     clear: function (e) {
       if (e) e.preventDefault();
-      this.searchBox().val(null);
-      this.showClearButtonMaybe();
+      this.clearSearchBox();
 
       var collection = this.collection;
 
@@ -326,7 +343,7 @@
        first page.
     */
     search: function () {
-      var matcher = _.bind(this.makeMatcher(this.searchBox().val()), this);
+      var matcher = _.bind(this.makeMatcher(this.query()), this);
       var col = this.collection;
       if (col.pageableCollection) col.pageableCollection.getFirstPage({silent: true});
       col.reset(this.shadowCollection.filter(matcher), {reindex: false});
@@ -339,8 +356,7 @@
        first page.
     */
     clear: function () {
-      this.searchBox().val(null);
-      this.showClearButtonMaybe();
+      this.clearSearchBox();
       var col = this.collection;
       if (col.pageableCollection) col.pageableCollection.getFirstPage({silent: true});
       col.reset(this.shadowCollection.models, {reindex: false});
@@ -471,12 +487,12 @@
     */
     search: function () {
       var col = this.collection;
-      if (!this.searchBox().val()) {
+      if (!this.query()) {
         col.reset(this.shadowCollection.models, {reindex: false});
         return;
       }
 
-      var searchResults = this.index.search(this.searchBox().val());
+      var searchResults = this.index.search(this.query());
       var models = [];
       for (var i = 0; i < searchResults.length; i++) {
         var result = searchResults[i];
