@@ -9,7 +9,7 @@
 
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(["underscore", "backbone", "backgrid", "lunr"], factory);
+    define(["underscore", "backbone", "backgrid"], factory);
   } else if (typeof exports == "object") {
     // CommonJS
     (function () {
