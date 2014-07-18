@@ -7,8 +7,11 @@
 */
 (function (root, factory) {
 
-  // CommonJS
-  if (typeof exports == "object") {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(["underscore", "backbone", "backgrid"], factory);
+  } else if (typeof exports == "object") {
+    // CommonJS
     (function () {
       var lunr;
       try { lunr = require("lunr"); } catch (e) {}
@@ -17,9 +20,8 @@
                                require("backgrid"),
                                lunr);
     }());
-  }
-  // Browser
-  else {
+  } else {
+    // Browser
     factory(root._, root.Backbone, root.Backgrid, root.lunr);
   }
 
