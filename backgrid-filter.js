@@ -88,7 +88,7 @@
           collection instanceof Backbone.PageableCollection &&
           collection.mode == "server") {
         collection.queryParams[this.name] = function () {
-          return self.searchBox().val() || null;
+          return self.query() || null;
         };
       }
     },
