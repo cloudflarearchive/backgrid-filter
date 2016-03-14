@@ -28,37 +28,14 @@ module.exports = function (grunt) {
         "test/coverage/**/*"
       ]
     },
-    jasmine: {
-      test: {
-        version: "1.3.1",
-        src: [
-          "backgrid-filter.js"
-        ],
-        options: {
-          specs: [
-            "test/filter.js"
-          ],
-          template: require("grunt-template-jasmine-istanbul"),
-          templateOptions: {
-            coverage: "test/coverage/coverage.json",
-            report: {
-              type: "html",
-              options: {
-                dir: "test/coverage"
-              }
-            }
-          },
-          vendor: [
-            "test/vendor/js/jquery.js",
-            "test/vendor/js/underscore.js",
-            "test/vendor/js/backbone.js",
-            "test/vendor/js/backgrid.js",
-            'test/vendor/js/lunr.js',
-            'test/vendor/js/backbone-pageable.js'
-          ]
-        }
+
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        singleRun: true
       }
     },
+
     jsduck: {
       main: {
         src: ["backgrid-filter.js"],
@@ -72,6 +49,7 @@ module.exports = function (grunt) {
         }
       }
     },
+
     recess: {
       csslint: {
         options: {
@@ -90,6 +68,7 @@ module.exports = function (grunt) {
         }
       }
     },
+
     uglify: {
       options: {
         mangle: true,
@@ -108,8 +87,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-recess");
   grunt.loadNpmTasks("grunt-jsduck");
-  grunt.loadNpmTasks("grunt-contrib-jasmine");
+  grunt.loadNpmTasks("grunt-karma");
 
   grunt.registerTask("dist", ["uglify", "recess"]);
-  grunt.registerTask("default", ["clean", "jsduck", "dist", "jasmine"]);
+  grunt.registerTask("default", ["clean", "jsduck", "dist", "karma"]);
 };

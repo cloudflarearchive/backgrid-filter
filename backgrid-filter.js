@@ -130,7 +130,6 @@
       return this.$el.find("a[data-backgrid-action=clear]");
     },
 
-
     /**
        Returns the current search query.
      */
