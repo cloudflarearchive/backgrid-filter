@@ -85,6 +85,15 @@ Docs = {
         "sort": 3
       },
       {
+        "name": "value",
+        "fullName": "Backgrid.Extension.ServerSideFilter.value",
+        "icon": "icon-property",
+        "url": "#!/api/Backgrid.Extension.ServerSideFilter-property-value",
+        "meta": {
+        },
+        "sort": 3
+      },
+      {
         "name": "placeholder",
         "fullName": "Backgrid.Extension.ServerSideFilter.placeholder",
         "icon": "icon-property",
@@ -98,6 +107,15 @@ Docs = {
         "fullName": "Backgrid.Extension.ServerSideFilter.initialize",
         "icon": "icon-method",
         "url": "#!/api/Backgrid.Extension.ServerSideFilter-method-initialize",
+        "meta": {
+        },
+        "sort": 3
+      },
+      {
+        "name": "clearSearchBox",
+        "fullName": "Backgrid.Extension.ServerSideFilter.clearSearchBox",
+        "icon": "icon-method",
+        "url": "#!/api/Backgrid.Extension.ServerSideFilter-method-clearSearchBox",
         "meta": {
         },
         "sort": 3
@@ -125,6 +143,15 @@ Docs = {
         "fullName": "Backgrid.Extension.ServerSideFilter.clearButton",
         "icon": "icon-method",
         "url": "#!/api/Backgrid.Extension.ServerSideFilter-method-clearButton",
+        "meta": {
+        },
+        "sort": 3
+      },
+      {
+        "name": "query",
+        "fullName": "Backgrid.Extension.ServerSideFilter.query",
+        "icon": "icon-method",
+        "url": "#!/api/Backgrid.Extension.ServerSideFilter-method-query",
         "meta": {
         },
         "sort": 3
