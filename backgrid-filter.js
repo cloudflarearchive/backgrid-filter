@@ -88,7 +88,7 @@
           collection instanceof Backbone.PageableCollection &&
           collection.mode == "server") {
         collection.queryParams[this.name] = function () {
-          return self.searchBox().val() || null;
+          return self.query() || null;
         };
       }
     },
@@ -108,7 +108,7 @@
      */
     showClearButtonMaybe: function () {
       var $clearButton = this.clearButton();
-      var searchTerms = this.searchBox().val();
+      var searchTerms = this.query();
       if (searchTerms) $clearButton.show();
       else $clearButton.hide();
     },
@@ -264,7 +264,7 @@
         shadowCollection.remove(model, options);
       });
       this.listenTo(collection, "sort", function (col) {
-        if (!this.searchBox().val()) shadowCollection.reset(col.models);
+        if (!this.query()) shadowCollection.reset(col.models);
       });
       this.listenTo(collection, "reset", function (col, options) {
         options = _.extend({reindex: true}, options || {});
