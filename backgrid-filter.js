@@ -12,14 +12,17 @@
     define(["underscore", "backbone", "backgrid"], factory);
   } else if (typeof exports == "object") {
     // CommonJS
-    (function () {
-      var lunr;
-      try { lunr = require("lunr"); } catch (e) {}
-      module.exports = factory(require("underscore"),
-                               require("backbone"),
-                               require("backgrid"),
-                               lunr);
-    }());
+    var lunr;
+    try {
+      lunr = require("lunr");
+    } catch (e) {}
+
+    module.exports = factory(
+      require("underscore"),
+      require("backbone"),
+      require("backgrid"),
+      lunr
+    );
   } else {
     // Browser
     factory(root._, root.Backbone, root.Backgrid, root.lunr);
