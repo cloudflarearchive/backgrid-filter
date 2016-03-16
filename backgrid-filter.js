@@ -32,13 +32,15 @@
 
   "use strict";
 
+  var exports = {};
+
   /**
      ServerSideFilter is a search form widget that submits a query to the server
      for filtering the current collection.
 
      @class Backgrid.Extension.ServerSideFilter
   */
-  var ServerSideFilter = Backgrid.Extension.ServerSideFilter = Backbone.View.extend({
+  var ServerSideFilter = exports.ServerSideFilter = Backgrid.Extension.ServerSideFilter = Backbone.View.extend({
 
     /** @property */
     tagName: "form",
@@ -209,7 +211,7 @@
      @class Backgrid.Extension.ClientSideFilter
      @extends Backgrid.Extension.ServerSideFilter
   */
-  var ClientSideFilter = Backgrid.Extension.ClientSideFilter = ServerSideFilter.extend({
+  var ClientSideFilter = exports.ClientSideFilter = Backgrid.Extension.ClientSideFilter = ServerSideFilter.extend({
 
     /** @property */
     events: _.extend({}, ServerSideFilter.prototype.events, {
@@ -378,7 +380,7 @@
      @class Backgrid.Extension.LunrFilter
      @extends Backgrid.Extension.ClientSideFilter
   */
-  var LunrFilter = Backgrid.Extension.LunrFilter = ClientSideFilter.extend({
+  var LunrFilter = exports.LunrFilter = Backgrid.Extension.LunrFilter = ClientSideFilter.extend({
 
     /**
        @property {string} [ref="id"]｀lunrjs` document reference attribute name.
@@ -510,5 +512,7 @@
     }
 
   });
+
+  return exports;
 
 }));
