@@ -7,11 +7,9 @@
 */
 (function (root, factory) {
 
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define(["underscore", "backbone", "backgrid"], factory);
-  } else if (typeof exports == "object") {
-    // CommonJS
+  // CommonJS
+  // This block must come first for Webpack to resolve the require call
+  if (typeof exports == "object") {
     var lunr;
     try {
       lunr = require("lunr");
@@ -23,8 +21,23 @@
       require("backgrid"),
       lunr
     );
-  } else {
-    // Browser
+  }
+  // AMD. Register as an anonymous module.
+  else if (typeof define === 'function' && define.amd) {
+    define(function (require, exports, module) {
+      var lunr;
+      try {
+        lunr = require("lunr.js")
+      } catch (e) {}
+
+      return factory(require("underscore"),
+                     require("backbone"),
+                     require("backgrid"),
+                     lunr);
+    });
+  }
+  // Browser
+  else {
     factory(root._, root.Backbone, root.Backgrid, root.lunr);
   }
 
