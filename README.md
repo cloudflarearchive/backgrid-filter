@@ -4,7 +4,8 @@ backgrid-filter
 
 Dependencies
 ============
-[lunr >= 0.7.0](http://lunrjs.com) (LunrFilter)
+[lunr >= 0.7.0](http://lunrjs.com) Optional. If you are still using bower, you
+need to include lunr.js in your own project's dependency requirement.
 
 Usage
 =====
