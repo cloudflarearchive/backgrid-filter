@@ -1,6 +1,6 @@
 bower_components
-components
 node_modules
+test/coverage
 .rbenv-gemsets
 .rvmrc
 \#*\#
