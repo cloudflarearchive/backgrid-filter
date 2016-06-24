@@ -28,7 +28,7 @@
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.0",
     "grunt-jsduck": "^1.0.0",
-    "grunt-karma": "^0.12.1",
+    "grunt-karma": "^1.0.0",
     "grunt-recess": "^1.0.0",
     "jasmine-core": "^2.4.1",
     "jquery": "^2.0.0",
