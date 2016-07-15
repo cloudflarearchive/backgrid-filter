@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/wyuenho/backgrid-text-cell.git"
+    "url": "git://github.com/wyuenho/backgrid-filter.git"
   },
   "keywords": [
     "backbone",
@@ -28,16 +28,16 @@
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.0",
     "grunt-jsduck": "^1.0.0",
-    "grunt-karma": "^0.12.1",
+    "grunt-karma": "^1.0.0",
     "grunt-recess": "^1.0.0",
-    "jasmine-core": "^2.4.1",
+    "jasmine-core": "^2.4.0",
     "jquery": "^2.0.0",
     "karma": "^1.0.0",
-    "karma-chrome-launcher": "^1.0.1",
-    "karma-coverage": "^0.5.5",
-    "karma-firefox-launcher": "^0.1.7",
-    "karma-jasmine": "^0.3.7",
-    "karma-jasmine-html-reporter": "^0.2.0",
+    "karma-chrome-launcher": "^1.0.0",
+    "karma-coverage": "^1.0.0",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-jasmine": "^1.0.0",
+    "karma-jasmine-textio-html-reporter": "^1.0.0",
     "karma-safari-launcher": "^1.0.0"
   },
   "dependencies": {
