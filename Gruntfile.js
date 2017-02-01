@@ -2,7 +2,7 @@
   backgrid-filter
   http://github.com/wyuenho/backgrid-text-cell
 
-  Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
+  Copyright (c) 2013-present-present Cloudflare, Inc and contributors
   Licensed under the MIT license.
 */
 
