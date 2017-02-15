@@ -27,7 +27,7 @@
     define(function (require, exports, module) {
       var lunr;
       try {
-        lunr = require("lunr.js")
+        lunr = require("lunr")
       } catch (e) {}
 
       return factory(require("underscore"),
