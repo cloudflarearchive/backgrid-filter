@@ -306,9 +306,9 @@
     },
 
     /**
-       Constructs a Javascript regular expression object for #makeMatcher.
+       Constructs a JavaScript regular expression object for #makeMatcher.
 
-       This default implementation takes a query string and returns a Javascript
+       This default implementation takes a query string and returns a JavaScript
        RegExp object that matches any of the words contained in the query string
        case-insensitively. Override this method to return a different regular
        expression matcher if this behavior is not desired.
