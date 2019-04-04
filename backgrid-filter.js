@@ -219,7 +219,7 @@
   /**
      ClientSideFilter is a search form widget that searches a collection for
      model matches against a query on the client side. The exact matching
-     algorithm can be overriden by subclasses.
+     algorithm can be overridden by subclasses.
 
      @class Backgrid.Extension.ClientSideFilter
      @extends Backgrid.Extension.ServerSideFilter
