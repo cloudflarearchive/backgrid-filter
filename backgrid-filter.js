@@ -334,7 +334,7 @@
 
        Subclasses overriding this method must take care to conform to the
        signature of the matcher function. The matcher function is a function
-       that takes a model as paramter and returns true if the model matches a
+       that takes a model as parameter and returns true if the model matches a
        search, or false otherwise.
 
        In addition, when the matcher function is called, its context will be
