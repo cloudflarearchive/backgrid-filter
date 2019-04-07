@@ -219,7 +219,7 @@
   /**
      ClientSideFilter is a search form widget that searches a collection for
      model matches against a query on the client side. The exact matching
-     algorithm can be overriden by subclasses.
+     algorithm can be overridden by subclasses.
 
      @class Backgrid.Extension.ClientSideFilter
      @extends Backgrid.Extension.ServerSideFilter
@@ -306,9 +306,9 @@
     },
 
     /**
-       Constructs a Javascript regular expression object for #makeMatcher.
+       Constructs a JavaScript regular expression object for #makeMatcher.
 
-       This default implementation takes a query string and returns a Javascript
+       This default implementation takes a query string and returns a JavaScript
        RegExp object that matches any of the words contained in the query string
        case-insensitively. Override this method to return a different regular
        expression matcher if this behavior is not desired.
@@ -334,7 +334,7 @@
 
        Subclasses overriding this method must take care to conform to the
        signature of the matcher function. The matcher function is a function
-       that takes a model as paramter and returns true if the model matches a
+       that takes a model as parameter and returns true if the model matches a
        search, or false otherwise.
 
        In addition, when the matcher function is called, its context will be
